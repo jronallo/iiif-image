@@ -19,13 +19,7 @@ The iiif-image package will provide a few different helpers for working with the
 ```coffee
 Parser = require('iiif-image').IIIFImageRequestParser
 parser = new Parser 'http://www.example.org/image-service/abcd1234/full/full/0/default.jpg'
-console.log parser.params
-```
-
-```coffee
-parser = require('iiif-image').parser
-params = parser.parse 'http://www.example.org/image-service/abcd1234/full/full/0/default.jpg'
-console.log params
+console.log parser.parse()
 ```
 
 ## Author

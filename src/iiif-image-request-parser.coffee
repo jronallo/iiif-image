@@ -34,14 +34,6 @@ class IIIFImageRequestParser
     quality: quality
     format: format
 
-  determine_size_type: (w, h) ->
-    if w? && h?
-      'sizeByWh'
-    else if w?
-      'sizeByW'
-    else if h?
-      'sizeByH'
-
   parse_region: (region_string) ->
     # If region has a comma it is not a "full" region
     if region_string.match /,/
@@ -86,6 +78,14 @@ class IIIFImageRequestParser
       type: size_type
     else
       size_string
+      
+  determine_size_type: (w, h) ->
+    if w? && h?
+      'sizeByWh'
+    else if w?
+      'sizeByW'
+    else if h?
+      'sizeByH'
 
   parse_rotation: (rotation_string) ->
     if rotation_string.match /!/
