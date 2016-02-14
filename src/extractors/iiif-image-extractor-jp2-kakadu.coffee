@@ -2,6 +2,7 @@ tempfile = require 'tempfile'
 child_process = require 'child_process'
 async = require 'async'
 fs = require 'fs'
+_ = require 'lodash'
 
 class IIIFImageExtractorJP2Kakadu
   constructor: (@options, @final_callback) ->
@@ -51,22 +52,32 @@ class IIIFImageExtractorJP2Kakadu
   resize_cmd: =>
     "convert #{@temp_bmp} -resize #{@params.size.w} #{@final_image}"
 
+  ###
+  TODO: optimize pick_reduction
+  This could be improved to be more exact in the reduction to pick. In some cases
+  where the image requested is the same as the size of on of the quality layers
+  it will pick a larger layer than it needs to.
+  ###
   pick_reduction: ->
-    # FIXME: Use @info for this
     region_width = if @params.region == 'full' then @info.width else @params.region.w
-    console.log [region_width, @params.size.w]
-    reduction_factor = (region_width / @params.size.w)
-    console.log "reduction_factor #{reduction_factor}"
-    scale_factors = @info.tiles[0].scaleFactors.reverse()
-    # TODO: How to do this without knowing number of scale_factors?
-    switch
-      when reduction_factor >= scale_factors[0] then 6
-      when reduction_factor >= scale_factors[1] then 5
-      when reduction_factor >= scale_factors[2] then 4
-      when reduction_factor >= scale_factors[3] then 3
-      when reduction_factor >= scale_factors[4] then 2
-      when reduction_factor >= scale_factors[5] then 1
-      else 0
 
+    reduction_factor = (region_width / @params.size.w)
+    scale_factors = @info.tiles[0].scaleFactors.reverse()
+
+    reduction_scale_matches = []
+    current_level = @info.levels
+    for scale_factor, index in scale_factors
+      scale_factor_reduction =
+        scale_factor: scale_factor
+        reduction: current_level
+      reduction_scale_matches.push scale_factor_reduction
+      current_level -= 1
+
+    # select every reduction_scale_match that is the same or larger than our
+    # reduction_factor
+    same_or_bigger = _.filter reduction_scale_matches, (rsm) ->
+      reduction_factor >= rsm.scale_factor
+    # Pick the first one that matches
+    same_or_bigger[0].reduction
 
 exports.IIIFImageExtractorJP2Kakadu = IIIFImageExtractorJP2Kakadu
