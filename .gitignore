@@ -1,3 +1,4 @@
 node_modules
 .npm
 npm-debug.log*
+tmp

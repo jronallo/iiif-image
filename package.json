@@ -4,7 +4,7 @@
   "description": "Node modules for working with the IIIF Image API",
   "main": "lib/index.js",
   "scripts": {
-    "test": "bin/coffeetape tests/**/*.coffee | tap-spec",
+    "test": "reset; bin/coffeetape tests/**/*.coffee | tap-spec",
     "watch": "nodemon -q -e js,coffee --watch lib --watch tests -x 'npm test'",
     "compile": "./node_modules/coffee-script/bin/coffee --watch --compile --output lib src"
   },
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "async": "^1.5.2",
+    "fs-extra": "^0.26.5",
     "tempfile": "^1.1.1",
     "xml2js": "^0.4.16"
   }
