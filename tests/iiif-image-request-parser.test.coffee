@@ -7,8 +7,6 @@ test 'parsing simple URL', (assert) ->
   url = 'http://www.example.org/image-service/abcd1234/full/full/0/default.jpg'
   parser = new Parser(url)
   params = parser.parse()
-  console.log params
-  # console.log params
   assert.equal params.identifier, 'abcd1234', 'Should parse identifier'
   assert.equal params.region, 'full', 'Should parse region'
   assert.equal params.size, 'full', 'Should parse size'
