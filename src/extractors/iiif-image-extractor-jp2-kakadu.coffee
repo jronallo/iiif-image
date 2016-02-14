@@ -25,8 +25,8 @@ class IIIFImageExtractorJP2Kakadu
         child_process.exec resize_cmd, (err, stdout, stderr) =>
           seriescb()
       (seriescb) => # actual response
-        @final_callback(@final_image)
         seriescb()
+        @final_callback(@final_image)
       (seriescb) => # clean up
         fs.unlink(@temp_bmp)
     ]

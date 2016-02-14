@@ -38,21 +38,23 @@ informer.inform(cb)
 In the simplest case the extractor can run as a callback within getting image information. In many image servers the information for the image will be cached and retrieved from the cache instead of needing to be retrieved like the following when a request comes in.
 
 ```coffee
-Informer = require('iiif-image').IIIFImageInformer
-informer = new Info '/path/to/image/file.jp2'
+iiif = require 'iiif-image'
+Informer = iiif.IIIFImageInformer
+Extractor = iiif.IIIFImageExtractor
+image_path = '/path/to/image/file.jp2'
 
 extractor_cb = (output_image_path) ->
   console.log output_image_path
 
 info_cb = (info) ->
-  Extractor = require('iiif-image').IIIFImageExtractor
   options =
-    path: '/path/to/image/file.jp2'
+    path: image_path
     params: params # from IIIFImageRequestParser
     info: info
-  extractor = new Extractor options
-  extractor.extract(extractor_cb)
+  extractor = new Extractor options, extractor_cb
+  extractor.extract()
 
+informer = new Informer image_path, info_cb
 informer.inform(info_cb)  
 ```
 
