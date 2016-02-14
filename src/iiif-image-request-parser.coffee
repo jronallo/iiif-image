@@ -11,6 +11,11 @@ class IIIFImageRequestParser
   rotation: Object
   quality: String
   format: String
+
+  If region or size return an Object, then type will give information on the
+  feature name required to serve the request.
+
+  The rotation Object includes the degrees and a boolean for whether to mirror the image or not first.
   ###
   parse: ->
     # Split the URL and then begin popping parts of the end
@@ -78,7 +83,7 @@ class IIIFImageRequestParser
       type: size_type
     else
       size_string
-      
+
   determine_size_type: (w, h) ->
     if w? && h?
       'sizeByWh'

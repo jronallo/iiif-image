@@ -24,5 +24,9 @@
     "faucet": "0.0.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.4.0"
+  },
+  "dependencies": {
+    "tempfile": "^1.1.1",
+    "xml2js": "^0.4.16"
   }
 }
