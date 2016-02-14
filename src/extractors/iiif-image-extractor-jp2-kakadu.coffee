@@ -16,14 +16,26 @@ class IIIFImageExtractorJP2Kakadu
     if @params.region == 'full'
       [top, left, height, width] = [0, 0, @info.height, @info.width]
     else
-      [top, left, height, width] = [@info.region.y, @info.region.x, @info.region.h, @info.region.w]
+      [top, left, height, width] = [@params.region.y, @params.region.x, @params.region.h, @params.region.w]
 
-    reduction = '3'
+    reduction = @pick_reduction()
     "kdu_expand
       -i #{@path}
       -o #{@temp_bmp}
       -region '{#{top},#{left}},{#{height},#{width}}'
       -reduce #{reduction}"
+
+  pick_reduction: ->
+    # base this just on width
+    reduction_factor = (@params.region.w / @params.size.w) - 1
+    switch
+      when reduction_factor >= 12 then 6
+      when reduction_factor >= 10 then 5
+      when reduction_factor >= 8 then 4
+      when reduction_factor >= 6 then 3
+      when reduction_factor >= 4 then 2
+      when reduction_factor >= 2 then 1
+      else 0
 
 
 exports.IIIFImageExtractorJP2Kakadu = IIIFImageExtractorJP2Kakadu
