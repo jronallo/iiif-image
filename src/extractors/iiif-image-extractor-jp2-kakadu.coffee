@@ -21,7 +21,7 @@ class IIIFImageExtractorJP2Kakadu
       (seriescb) -> # kdu_expand
         child_process.exec kdu_expand_cmd, (err, stdout, stderr) =>
           seriescb()
-      (seriescb) -> # convert
+      (seriescb) -> # convert (resize, rotate, etc.)
         child_process.exec resize_cmd, (err, stdout, stderr) =>
           seriescb()
       (seriescb) => # actual response
@@ -41,16 +41,22 @@ class IIIFImageExtractorJP2Kakadu
     left_pct = left / @info.width
     height_pct = height / @info.height
     width_pct = width / @info.width
-    reduction = @pick_reduction()
 
-    "kdu_expand
+    cmd = "kdu_expand
       -i #{@path}
       -o #{@temp_bmp}
-      -region '{#{top_pct},#{left_pct}},{#{height_pct},#{width_pct}}'
-      -reduce #{reduction}"
+      -region '{#{top_pct},#{left_pct}},{#{height_pct},#{width_pct}}'"
+
+    reduction = if @params.size == 'full'
+      0
+    else
+      @pick_reduction()
+    cmd + " -reduce #{reduction}"
 
   resize_cmd: =>
-    "convert #{@temp_bmp} -resize #{@params.size.w} #{@final_image}"
+    cmd = "convert #{@temp_bmp} "
+    cmd += " -resize #{@params.size.w} " if @params.size != 'full'
+    cmd + " #{@final_image}"
 
   ###
   TODO: optimize pick_reduction
