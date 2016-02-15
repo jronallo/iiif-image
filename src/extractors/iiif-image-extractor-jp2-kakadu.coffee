@@ -15,7 +15,7 @@ class IIIFImageExtractorJP2Kakadu
 
   extract: =>
     kdu_expand_cmd = @kdu_expand_cmd()
-    console.log kdu_expand_cmd
+    # console.log kdu_expand_cmd
     resize_cmd = @resize_cmd()
     async.series [
       (seriescb) -> # kdu_expand
