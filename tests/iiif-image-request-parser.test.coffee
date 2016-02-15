@@ -43,6 +43,13 @@ test 'parsing pct:x,y,w,h region', (assert) ->
   assert.deepEqual params.region, region
   assert.end()
 
+test 'parsing square region URL', (assert) ->
+  url = 'http://www.example.org/image-service/abcd1234/square/100,200/0/default.jpg'
+  parser = new Parser(url)
+  params = parser.parse()
+  assert.equal params.region, 'square'
+  assert.end()
+
 test 'parsing size by w,h', (assert) ->
   url = 'http://www.example.org/image-service/abcd1234/full/100,200/0/default.jpg'
   parser = new Parser(url)

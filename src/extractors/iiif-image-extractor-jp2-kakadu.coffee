@@ -55,7 +55,15 @@ class IIIFImageExtractorJP2Kakadu
 
   resize_cmd: =>
     cmd = "convert #{@temp_bmp} "
-    cmd += " -resize #{@params.size.w} " if @params.size != 'full'
+    if @params.size != 'full'
+      if @params.size.w?
+        cmd += " -resize #{@params.size.w} "
+      else
+        cmd += " -resize x#{@params.size.h} "
+    # do we need to rotate too?
+    degrees = @params.rotation.degrees
+    if degrees != 0 && degrees in [90, 180, 270]
+      cmd += " -rotate #{degrees} "
     cmd + " #{@final_image}"
 
   ###
@@ -65,11 +73,14 @@ class IIIFImageExtractorJP2Kakadu
   it will pick a larger layer than it needs to.
   ###
   pick_reduction: ->
-    region_width = if @params.region == 'full' then @info.width else @params.region.w
+    if @params.size.w?
+      region_width = if @params.region == 'full' then @info.width else @params.region.w
+      reduction_factor = (region_width / @params.size.w)
+    else
+      region_height = if @params.region == 'full' then @info.height else @params.region.h
+      reduction_factor = (region_height / @params.size.h)
 
-    reduction_factor = (region_width / @params.size.w)
     scale_factors = @info.tiles[0].scaleFactors.reverse()
-
     reduction_scale_matches = []
     current_level = @info.levels
     for scale_factor, index in scale_factors

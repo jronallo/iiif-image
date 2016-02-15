@@ -8,10 +8,6 @@ fixtures = ->
   params =
     identifier: 'trumpler14'
     region: 'full'
-      # x: 0
-      # y: 0
-      # h: 1600
-      # w: 1600
     size:
       w: 200
       h: undefined
@@ -48,7 +44,8 @@ fixtures = ->
 
 cleanup = (output_image_path) ->
   # now clean up
-  tmp_path = pather.join(__dirname, '/../tmp/out.jpg')
+  extname = pather.extname output_image_path
+  tmp_path = pather.join(__dirname, "/../tmp/out#{extname}")
   fs.copySync(output_image_path, tmp_path)
   fs.unlink(output_image_path)
 
@@ -62,7 +59,7 @@ test_assertions_and_cleanup = (assert, output_image_path) ->
 Tests start here:
 ###
 
-test 'extract image with full region', (assert) ->
+test 'extract image with full region and w, size', (assert) ->
   # assert.plan(2)
   data = fixtures()
   tester = (output_image_path) ->
@@ -79,10 +76,44 @@ test 'extract image with xywh region', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
-test 'extract image with small region full size', (assert) ->
+test 'extract image with small region and full size', (assert) ->
   data = fixtures()
   data.options.params['region'] = data.region_xywh
   data.options.params['size'] = 'full'
+  tester = (output_image_path) ->
+    test_assertions_and_cleanup(assert, output_image_path)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'extract image with small region and w,h size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = data.region_xywh
+  data.options.params['size'] = {w: 200, h: 200}
+  tester = (output_image_path) ->
+    test_assertions_and_cleanup(assert, output_image_path)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'extract image with small region and ,h size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = data.region_xywh
+  data.options.params['size'] = {w: undefined, h: 200}
+  tester = (output_image_path) ->
+    test_assertions_and_cleanup(assert, output_image_path)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'extract full image with small size but rotated 90 degrees', (assert) ->
+  data = fixtures()
+  data.options.params['rotation'] = {degrees: 90, mirror: false}
+  tester = (output_image_path) ->
+    test_assertions_and_cleanup(assert, output_image_path)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'extract and convert to png', (assert) ->
+  data = fixtures()
+  data.options.params['format'] = 'png'
   tester = (output_image_path) ->
     test_assertions_and_cleanup(assert, output_image_path)
   extractor = new Extractor data.options, tester
