@@ -12,6 +12,10 @@ The iiif-image package will provide a few different helpers for working with the
 - `IIIFImageExtractor`: Given a path to an image on the filesystem, information about the image (from `IIIFImageInfo`), and request parameters (from `IIIFImageRequestParser`), it extracts the requested image. Any scaling and rotation is done via Imagemagic `convert`.
   - `IIIFImageExtractorJP2Kakadu`: Currently only JP2 images can be extracted via Kakadu.
 
+## Requirements
+
+Currently the Kakadu binary `kdu_expand` and the Imagemagick `convert` command ought to be in the path of the user who is running this code.
+
 ## Currently Provided Modules
 
 ### `IIIFImageRequestParser`
@@ -74,6 +78,9 @@ The goal is to have `iiif-image` be compliant with all levels of [version 2.1](h
 - Quality: Level 1 (unlikely that options other than 'default' will be supported without a pull request)
 - Format: Level 2. Since the format is just passed through from the parameters it receives to Imagemagick, other formats beyond the Level 2 required ones could work.
 - HTTP Features and Indicating Compliance: Left to the individual image server to implement.
+
+## TODO
+- Add option for using sharp to convert images and do other image manipulations (rotation, mirroring, etc)
 
 ## Author
 
