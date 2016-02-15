@@ -9,6 +9,7 @@ The iiif-image package will provide a few different helpers for working with the
 - `IIIFImageRequestParser`: Parses incoming IIIF Image Request URLs and returns
 - `IIIFImageInformer`: Given a path on the filesystem to an image provides information about the image required for responding to a IIIF Image Information Request. This information is also used for properly extracting an image. Note that currently this just gathers information like width and height. (Optional attributes like sizes and tiles will be done too.) It does not format a complete appropriate response to a IIIF Image Information Request.
   - `IIIFImageInformerJP2Kakadu`: Currently only information from JP2 images are provided via Kakadu. Other information providers may be added in the future.
+- `IIIFInfoJSONCreator`: Given the output of IIIFImageInformer and some other information it will create a nice JSON or JSON-LD representation in response to an IIIF Image Information request.
 - `IIIFImageExtractor`: Given a path to an image on the filesystem, information about the image (from `IIIFImageInfo`), and request parameters (from `IIIFImageRequestParser`), it extracts the requested image. Any scaling and rotation is done via Imagemagic `convert`.
   - `IIIFImageExtractorJP2Kakadu`: Currently only JP2 images can be extracted via Kakadu.
 
@@ -31,10 +32,18 @@ console.log params
 
 ```coffee
 Informer = require('iiif-image').IIIFImageInformer
-informer = new Info '/path/to/image/file.jp2'
 cb = (info) ->
   console.log info
-informer.inform(cb)
+informer = new Informer '/path/to/image/file.jp2', cb
+informer.inform()
+```
+
+### `IIIFInfoJSONCreator`
+
+```coffee
+InfoJSONCreator = require('iiif-image').IIIFInfoJSONCreator
+info_json_creator = new InfoJSONCreator info, server_info
+info_json = info_json_creator.info_json
 ```
 
 ### `IIIFImageExtractor`
