@@ -4,7 +4,7 @@ util = require('util')
 fs = require 'fs'
 async = require 'async'
 
-class IIIFImageInformerJP2Kakadu
+class InformerJP2Kakadu
   # Accepts a callback that is only called after all the information is gathered
   constructor: (@path, @final_callback) ->
     @info = {}
@@ -106,4 +106,4 @@ class IIIFImageInformerJP2Kakadu
     @info.sizes = sizes.reverse()
     cb()
 
-exports.IIIFImageInformerJP2Kakadu = IIIFImageInformerJP2Kakadu
+exports.InformerJP2Kakadu = InformerJP2Kakadu

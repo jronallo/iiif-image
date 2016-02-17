@@ -1,5 +1,5 @@
 test = require 'tape'
-Parser = require('../lib/iiif-image-request-parser').IIIFImageRequestParser
+Parser = require('../lib/image-request-parser').ImageRequestParser
 
 # {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
 

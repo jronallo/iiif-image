@@ -4,7 +4,7 @@ async = require 'async'
 fs = require 'fs'
 _ = require 'lodash'
 
-class IIIFImageExtractorJP2Kakadu
+class ExtractorJP2Kakadu
   constructor: (@options, @final_callback) ->
     # console.log @options
     @path = @options.path
@@ -97,4 +97,4 @@ class IIIFImageExtractorJP2Kakadu
     # Pick the first one that matches
     same_or_bigger[0].reduction
 
-exports.IIIFImageExtractorJP2Kakadu = IIIFImageExtractorJP2Kakadu
+exports.ExtractorJP2Kakadu = ExtractorJP2Kakadu

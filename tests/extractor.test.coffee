@@ -1,5 +1,5 @@
 test = require 'tape'
-Extractor = require('../lib/iiif-image-extractor').IIIFImageExtractor
+Extractor = require('../lib/extractor').Extractor
 pather = require 'path'
 path = pather.join __dirname, '/images/trumpler14.jp2'
 fs = require 'fs-extra'

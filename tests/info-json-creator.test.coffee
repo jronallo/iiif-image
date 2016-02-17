@@ -1,5 +1,5 @@
 test = require 'tape'
-InfoJSONCreator = require('../lib/iiif-info-json-creator').IIIFInfoJSONCreator
+InfoJSONCreator = require('../lib/info-json-creator').InfoJSONCreator
 
 info =
   width: 6000

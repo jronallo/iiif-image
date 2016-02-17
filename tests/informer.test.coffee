@@ -1,5 +1,5 @@
 test = require 'tape'
-Informer = require('../lib/iiif-image-informer').IIIFImageInformer
+Informer = require('../lib/informer').Informer
 pather = require 'path'
 path = pather.join __dirname, '/images/trumpler14.jp2'
 

@@ -1,6 +1,6 @@
 _ = require 'lodash'
 
-class IIIFInfoJSONCreator
+class InfoJSONCreator
   constructor: (@info, @server_info) ->
     @info_json = _.cloneDeep @info
     delete @info_json['levels']
@@ -11,4 +11,4 @@ class IIIFInfoJSONCreator
     @info_json["@context"] = "http://iiif.io/api/image/2/context.json"
     @info_json
 
-exports.IIIFInfoJSONCreator = IIIFInfoJSONCreator
+exports.InfoJSONCreator = InfoJSONCreator

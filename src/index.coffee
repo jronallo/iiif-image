@@ -1,5 +1,5 @@
 module.exports =
-  IIIFImageExtractor: require('./iiif-image-extractor').IIIFImageExtractor
-  IIIFImageRequestParser: require('./iiif-image-request-parser').IIIFImageRequestParser
-  IIIFImageInformer: require('./iiif-image-informer').IIIFImageInformer
-  IIIFInfoJSONCreator: require('./iiif-info-json-creator').IIIFInfoJSONCreator
+  Extractor: require('./extractor').Extractor
+  RequestParser: require('./image-request-parser').RequestParser
+  Informer: require('./informer').Informer
+  InfoJSONCreator: require('./info-json-creator').InfoJSONCreator

@@ -1,4 +1,4 @@
-class IIIFImageRequestParser
+class ImageRequestParser
   constructor: (@url) ->
 
   ###
@@ -100,4 +100,4 @@ class IIIFImageRequestParser
       degrees: parseInt rotation_string
       mirror: false
 
-exports.IIIFImageRequestParser = IIIFImageRequestParser
+exports.ImageRequestParser = ImageRequestParser
