@@ -3,6 +3,7 @@ child_process = require 'child_process'
 async = require 'async'
 fs = require 'fs'
 _ = require 'lodash'
+ConvertManipulator = require('../manipulators/convert-manipulator').ConvertManipulator
 
 class ExtractorJP2Kakadu
   constructor: (@options, @final_callback) ->
@@ -11,22 +12,20 @@ class ExtractorJP2Kakadu
     @info = @options.info
     @params = @options.params
     @temp_bmp = tempfile('.bmp')
-    @final_image = tempfile(".#{@params.format}")
+    @final_image_path = tempfile(".#{@params.format}")
 
   extract: =>
     kdu_expand_cmd = @kdu_expand_cmd()
-    # console.log kdu_expand_cmd
-    resize_cmd = @resize_cmd()
     async.series [
       (seriescb) -> # kdu_expand
         child_process.exec kdu_expand_cmd, (err, stdout, stderr) =>
           seriescb()
-      (seriescb) -> # convert (resize, rotate, etc.)
-        child_process.exec resize_cmd, (err, stdout, stderr) =>
-          seriescb()
+      (seriescb) => # convert (resize, rotate, etc.)
+        manipulator = new ConvertManipulator @temp_bmp, @params, @final_image_path, seriescb
+        manipulator.manipulate()
       (seriescb) => # actual response
         seriescb()
-        @final_callback(@final_image)
+        @final_callback(@final_image_path)
       (seriescb) => # clean up
         fs.unlink(@temp_bmp)
     ]
@@ -52,19 +51,6 @@ class ExtractorJP2Kakadu
     else
       @pick_reduction()
     cmd + " -reduce #{reduction}"
-
-  resize_cmd: =>
-    cmd = "convert #{@temp_bmp} "
-    if @params.size != 'full'
-      if @params.size.w?
-        cmd += " -resize #{@params.size.w} "
-      else
-        cmd += " -resize x#{@params.size.h} "
-    # do we need to rotate too?
-    degrees = @params.rotation.degrees
-    if degrees != 0 && degrees in [90, 180, 270]
-      cmd += " -rotate #{degrees} "
-    cmd + " #{@final_image}"
 
   ###
   TODO: optimize pick_reduction
