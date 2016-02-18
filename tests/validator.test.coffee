@@ -57,8 +57,14 @@ test 'region cannot be other than string or object', (assert) ->
   assert.notOk v.valid_region()
   assert.end()
 
-test 'region width and height ', (assert) ->
+test 'region with zero width and height', (assert) ->
   params = region: {x: 0, y:0, w: 0, h: 0}
+  v = new Validator params
+  assert.notOk v.valid_region()
+  assert.end()
+
+test 'invalid region with NaN value for region object', (assert) ->
+  params = region: {x:NaN, y:0, w:3, h:3}
   v = new Validator params
   assert.notOk v.valid_region()
   assert.end()

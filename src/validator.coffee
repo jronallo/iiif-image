@@ -41,7 +41,7 @@ class Validator
     if type(region) == 'string'
       if region == 'full' then true else false
     else if type(region) == 'object'
-      if type(region.x) == 'number' && type(region.y) == 'number' && type(region.w) == 'number' && type(region.h) == 'number'
+      if type(region.x) == 'number' && !isNaN(region.x) && type(region.y) == 'number' && !isNaN(region.y) && type(region.w) == 'number' && !isNaN(region.w) && type(region.h) == 'number' && !isNaN(region.h)
         if region.w > 0 && region.h > 0
           true
         else
