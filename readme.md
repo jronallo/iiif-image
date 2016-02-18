@@ -12,6 +12,7 @@ The iiif-image package will provide a few different helpers for working with the
 - `InfoJSONCreator`: Given the output of `Informer` and some other information it will create a nice JSON or JSON-LD representation in response to an IIIF Image Information request.
 - `Extractor`: Given a path to an image on the filesystem, information about the image (from `Informer`), and request parameters (from `ImageRequestParser`), it extracts the requested image. Any scaling and rotation is done via Imagemagic `convert`.
   - `ExtractorJP2Kakadu`: Currently only JP2 images can be extracted via Kakadu.
+    - While there are multiple manipulators only the `SharpManipulator` is hooked up to work with this extractor. The Imagemagick-based `ConvertManipulator` was known to have been working at some point in the past. These could eventually be configurable, but in most cases the `SharpManipulator` ought to be preferred as it will return the image as a Buffer which can be sent directly back to the client.
 
 ## Requirements
 
