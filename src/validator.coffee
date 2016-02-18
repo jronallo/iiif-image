@@ -1,5 +1,12 @@
 ###
+Validates Image Request URL parameters as well as whether the
+requested region is out of bounds (if image info is given as well).
+Except for rotation values it will determine whether the request is
+valid according to the specification and not necessarily whether
+any image server supports particular values. For instance the specification
+lists webp as a valid format though
 
+TODO: extend the validations to allow for support levels to be given to more accurately reflect what any particular image server might actually support.
 ###
 _ = require 'lodash'
 
@@ -17,6 +24,9 @@ type = do ->
 
 class Validator
   constructor: (@params, @info) ->
+
+  valid: ->
+    if @valid_params() && !@out_of_bounds() then true else false
 
   ###
   Only checks that the format of the request params is correct. Does not check
@@ -47,7 +57,9 @@ class Validator
       if size == 'full' then true else false
     else if type(size) == 'object'
       # could be some w and h combination or a percentage
-      if type(size.w) == 'number' && type(size.h) == 'number'
+      if size.w == 0 || size.h == 0
+        false
+      else if type(size.w) == 'number' && type(size.h) == 'number'
         true
       else if type(size.w) == 'number' && !size.h?
         true
@@ -78,6 +90,10 @@ class Validator
     valid_formats = ['jpg', 'tif', 'png', 'gif', 'jp2', 'pdf', 'webp']
     if _.includes valid_formats, @params.format then true else false
 
+  out_of_bounds: ->
+    region = @params.region
+    if (region.x? && region.x > @info.width) ||
+      (region.y? && region.y > @info.height) then true else false
 
 
 exports.Validator = Validator

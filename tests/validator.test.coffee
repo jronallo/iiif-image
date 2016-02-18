@@ -1,4 +1,5 @@
 test = require 'tape'
+_ = require 'lodash'
 Validator = require('../lib/validator').Validator
 
 all_params =
@@ -13,17 +14,29 @@ all_params =
   quality: 'default'
   format: 'jpg'
 
+info =
+  width: 3906
+  height: 3906
+  levels: 6
+  sizes: [
+    { height: 62, width: 62 }, { height: 123, width: 123 },
+    { height: 245, width: 245 }, { height: 489, width: 489 },
+    { height: 977, width: 977 }, { height: 1953, width: 1953 },
+    { height: 3906, width: 3906 }]
+  tiles: [ { scaleFactors: [ 1, 2, 4, 8, 16, 32, 64 ], width: 1024 }]
+
 ###
 Tests start here
 ###
 
 test 'validation of params of the request', (assert) ->
-  v = new Validator all_params
+  v = new Validator all_params, info
   assert.ok v.valid_region(), 'valid region'
   assert.ok v.valid_size(), 'valid size'
   assert.ok v.valid_rotation(), 'valid rotation'
   assert.ok v.valid_quality(), 'valid quality'
   assert.ok v.valid_params(), 'valid params'
+  assert.ok v.valid(), 'all valid'
   assert.end()
 
 test 'validate region with full', (assert) ->
@@ -86,6 +99,12 @@ test 'size with object with percentage', (assert) ->
   assert.ok v.valid_size()
   assert.end()
 
+test 'zero size invalid', (assert) ->
+  params = size: {w:0, h:undefined}
+  v = new Validator params
+  assert.notOk v.valid_size()
+  assert.end()
+
 test 'valid rotation', (assert) ->
   params = rotation: {degrees: 90}
   v = new Validator params
@@ -140,4 +159,11 @@ test 'invalid format', (assert) ->
   params = format: 'asdf'
   v = new Validator params
   assert.notOk v.valid_format()
+  assert.end()
+
+test 'invalid request', (assert) ->
+  params = _.clone(all_params)
+  params.region = {x: 3907, y:3906, w:2, h:2 }
+  v = new Validator params, info
+  assert.notOk v.valid()
   assert.end()
