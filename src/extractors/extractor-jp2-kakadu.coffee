@@ -4,28 +4,31 @@ async = require 'async'
 fs = require 'fs'
 _ = require 'lodash'
 ConvertManipulator = require('../manipulators/convert-manipulator').ConvertManipulator
+SharpManipulator = require('../manipulators/sharp-manipulator').SharpManipulator
 
 class ExtractorJP2Kakadu
+  # TODO: create way to allow choosing a manipulator in the constructor
   constructor: (@options, @final_callback) ->
     # console.log @options
     @path = @options.path
     @info = @options.info
     @params = @options.params
     @temp_bmp = tempfile('.bmp')
-    @final_image_path = tempfile(".#{@params.format}")
+    @final_image = tempfile(".#{@params.format}")
+    # @manipulator = new ConvertManipulator @temp_bmp, @params, @final_image
+    @manipulator = new SharpManipulator @temp_bmp, @params, @final_image
 
   extract: =>
     kdu_expand_cmd = @kdu_expand_cmd()
-    async.series [
+    async.waterfall [
       (seriescb) -> # kdu_expand
         child_process.exec kdu_expand_cmd, (err, stdout, stderr) =>
           seriescb()
       (seriescb) => # convert (resize, rotate, etc.)
-        manipulator = new ConvertManipulator @temp_bmp, @params, @final_image_path, seriescb
-        manipulator.manipulate()
-      (seriescb) => # actual response
+        @manipulator.manipulate(seriescb)
+      (image_buffer, info, seriescb) => # actual response
         seriescb()
-        @final_callback(@final_image_path)
+        @final_callback(image_buffer)
       (seriescb) => # clean up
         fs.unlink(@temp_bmp)
     ]

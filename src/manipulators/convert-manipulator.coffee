@@ -2,15 +2,16 @@ child_process = require 'child_process'
 
 # Use Imagemagick's convert command to manipulate an image based on params
 class ConvertManipulator
-  constructor: (@image_path, @params, @final_image_path, @callback) ->
+  constructor: (@image_path, @params, @final_image_path) ->
 
-  manipulate: =>
+  manipulate: (callback) =>
     convert_cmd = @convert_cmd()
     child_process.exec convert_cmd, (err, stdout, stderr) =>
-      @callback()
+      callback()
 
   convert_cmd: =>
     cmd = "convert #{@image_path} "
+    #resize
     if @params.size != 'full'
       if @params.size.w?
         cmd += " -resize #{@params.size.w} "

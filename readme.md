@@ -107,9 +107,10 @@ npm run watch
 Tests are written using tape.
 
 ### TODO
-- Add option for using sharp to convert images and do other image manipulations (rotation, mirroring, etc)
 - Test individual extractors and informers.
+- Separate tests for each manipulator. Currently only sharp is turned on.
 - Module for taking parameters and creating a valid IIIF Image Request URI.
+- Better tests for output images
 
 ## Author
 
