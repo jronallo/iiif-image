@@ -17,13 +17,13 @@ all_params =
 Tests start here
 ###
 
-test 'validation of format of the request', (assert) ->
+test 'validation of params of the request', (assert) ->
   v = new Validator all_params
   assert.ok v.valid_region(), 'valid region'
   assert.ok v.valid_size(), 'valid size'
   assert.ok v.valid_rotation(), 'valid rotation'
   assert.ok v.valid_quality(), 'valid quality'
-  assert.ok v.valid_format(), 'valid format'
+  assert.ok v.valid_params(), 'valid params'
   assert.end()
 
 test 'validate region with full', (assert) ->
@@ -120,4 +120,24 @@ test 'valid bitonal quality', (assert) ->
   params = quality: 'bitonal'
   v = new Validator params
   assert.ok v.valid_quality()
+  assert.end()
+
+test 'invalid quality', (assert) ->
+  params = quality: 'unitonal'
+  v = new Validator params
+  assert.notOk v.valid_quality()
+  assert.end()
+
+test 'valid formats', (assert) ->
+  valid_formats = ['jpg', 'tif', 'png', 'gif', 'jp2', 'pdf', 'webp']
+  for format in valid_formats
+    params = format: format
+    v = new Validator params
+    assert.ok v.valid_format()
+  assert.end()
+
+test 'invalid format', (assert) ->
+  params = format: 'asdf'
+  v = new Validator params
+  assert.notOk v.valid_format()
   assert.end()

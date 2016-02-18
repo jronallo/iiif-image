@@ -23,8 +23,8 @@ class Validator
   for whether is matches up with the image information in a way that can be
   successful.
   ###
-  valid_format: ->
-    if @valid_region() && @valid_size() && @valid_rotation() && @valid_quality() then true else false
+  valid_params: ->
+    if @valid_region() && @valid_size() && @valid_rotation() && @valid_quality() && @valid_format() then true else false
 
   valid_region: ->
     region = @params.region
@@ -73,6 +73,10 @@ class Validator
   valid_quality: ->
     valid_qualities = ['color', 'gray', 'bitonal', 'default']
     if _.includes valid_qualities, @params.quality then true else false
+
+  valid_format: ->
+    valid_formats = ['jpg', 'tif', 'png', 'gif', 'jp2', 'pdf', 'webp']
+    if _.includes valid_formats, @params.format then true else false
 
 
 
