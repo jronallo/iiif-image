@@ -1,10 +1,14 @@
 # iiif-image
 
-Node modules for working with the IIIF Image API
+Node modules for working with the [International Image Interoperability Framework (IIIF) Image API](http://iiif.io/api/image/).
+
+## Nota bene
+
+This is not an offical implementation of the [IIIF Image API](http://iiif.io/api/image/). For other image servers and applications that implement the standard see <http://iiif.io/apps-demos/> and the [IIIF github organization](https://github.com/iiif).
 
 ## Modules
 
-The iiif-image package will provide a few different helpers for working with the IIIF Image API.
+The iiif-image package provides a few different helpers for working with the IIIF Image API.
 
 - `ImageRequestParser`: Parses incoming IIIF Image Request URLs and returns
 - `Informer`: Given a path on the filesystem to an image provides information about the image required for responding to a IIIF Image Information Request. This information is also used for properly extracting an image. Note that currently this just gathers information like width and height. (Optional attributes like sizes and tiles will be done too.) It does not format a complete appropriate response to a IIIF Image Information Request.
@@ -16,7 +20,7 @@ The iiif-image package will provide a few different helpers for working with the
 
 ## Requirements
 
-Currently the Kakadu binary `kdu_expand` and the Imagemagick `convert` command ought to be in the path of the user who is running this code.
+Currently the Kakadu binary `kdu_expand` ought to be in the path of the user who is running this code. Image manipulation relies on the [sharp](http://sharp.dimens.io/en/stable/) module which relies on libvips.
 
 ## Currently Provided Modules
 
