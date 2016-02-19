@@ -108,6 +108,7 @@ npm run watch
 Tests are written using tape.
 
 ### TODO
+- Error handling.
 - Test individual extractors and informers.
 - Separate tests for each manipulator. Currently only sharp is turned on.
 - Module for taking parameters and creating a valid IIIF Image Request URI.
