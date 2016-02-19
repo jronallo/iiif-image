@@ -49,7 +49,7 @@ info_json = info_json_creator.info_json
 
 ### `Extractor`
 
-In the simplest case the extractor can run as a callback within getting image information. In many image servers the information for the image will be cached and retrieved from the cache instead of needing to be retrieved like the following when a request comes in.
+In the simplest case like the following the extractor can run as a callback from an `Informer` after getting the image information. In many image servers the image information will be cached and retrieved from the cache in which case only `info_cb` would need to be called without invoking an `Informer`.
 
 ```coffee
 iiif = require 'iiif-image'
@@ -57,8 +57,8 @@ Informer = iiif.Informer
 Extractor = iiif.Extractor
 image_path = '/path/to/image/file.jp2'
 
-extractor_cb = (output_image_path) ->
-  console.log output_image_path
+extractor_cb = (output_image) ->
+  # Do something with the output_image Buffer like send the response and cache the image
 
 info_cb = (info) ->
   options =
@@ -76,9 +76,9 @@ informer.inform(info_cb)
 
 The goal is to have `iiif-image` be compliant with all levels of [version 2.1](http://iiif.io/api/image/2.1/compliance/) of the API. It is not there yet. The following is what I believe to be the current compliance level.
 
-`ImageRequestParser` should be able to extract parameters from all valid Image Request URLs. It does not enforce any quality or format as this is left up to the server to determine what it wants to support. This also means that qualities and formats not mentioned in the specification will be treated like any other value.
+`ImageRequestParser` should be able to extract parameters from all valid Image Request URLs. It does not enforce anything like quality or format as this is left up to the server to determine what it wants to support. This also means that qualities and formats not mentioned in the specification will be treated like any other value from the perspective of the parser. A `Validator` is provided which can check the validity of the request parameters that a parser creates. This allows for validity checks early on in a request. A `Validator` if it also has image information can also check whether the requested region is out of bounds.
 
-`InformerJP2Kakadu` ought to provide most (all?) of the information needed about an image without having to know about the particulars of the image server.
+`InformerJP2Kakadu` ought to provide most (all?) of the information needed about an image without having to know about the particulars of the image server. To create a full Image Information Response this needs to be combined with data about the server. A `InfoJSONCreator` can be used to create a full info.json response.
 
 `ExtractorJP2Kakadu` is believed to comply with Level 0 in all aspects but some parameters at a higher level.
 
@@ -86,7 +86,7 @@ The goal is to have `iiif-image` be compliant with all levels of [version 2.1](h
 - Size: Level 1 (except sizeByPct)
 - Rotation: Level 2 (does not do mirroring yet)
 - Quality: Level 1 (unlikely that options other than 'default' will be supported without a pull request)
-- Format: Level 2. Since the format is just passed through from the parameters it receives to Imagemagick, other formats beyond the Level 2 required ones could work.
+- Format: Level 2. Since the format is just passed through from the parameters it receives to sharp, other formats beyond the Level 2 required ones that sharp supports could work. The `ConvertManipulator` which uses Imagemagick could probably create even more still.Imagemagick
 - HTTP Features and Indicating Compliance: Left to the individual image server to implement.
 
 ## Development
