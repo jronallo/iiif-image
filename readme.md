@@ -20,7 +20,7 @@ The iiif-image package provides a few different helpers for working with the III
 
 ## Requirements
 
-Currently the Kakadu binary `kdu_expand` ought to be in the path of the user who is running this code. Image manipulation relies on the [sharp](http://sharp.dimens.io/en/stable/) module which relies on libvips.
+Currently the Kakadu binary `kdu_expand` ought to be in the path of the user who is running this code. We do not distribute the Kakadu executables. See the Kakaud copyright notice and disclaimer below. Image manipulation relies on the [sharp](http://sharp.dimens.io/en/stable/) module which relies on libvips.
 
 ## Currently Provided Modules
 
@@ -117,6 +117,13 @@ Tests are written using tape.
 - Separate tests for each manipulator. Currently only sharp is turned on.
 - Module for taking parameters and creating a valid IIIF Image Request URI.
 - Better tests for output images
+
+## Kakadu Copyright Notice and Disclaimer
+You will need to install the Kakadu binaries/executables available [here](http://kakadusoftware.com/downloads/). The executables available there are made available for demonstration purposes only. Neither the author, Dr. Taubman, nor UNSW Australia accept any liability arising from their use or re-distribution.
+
+That site states:
+
+> Copyright is owned by NewSouth Innovations Pty Limited, commercial arm of the UNSW Australia in Sydney. **You are free to trial these executables and even to re-distribute them, so long as such use or re-distribution is accompanied with this copyright notice and is not for commercial gain. Note: Binaries can only be used for non-commercial purposes.** If in doubt please contact the Kakadu Team at info@kakadusoftware.com.
 
 ## Author
 
