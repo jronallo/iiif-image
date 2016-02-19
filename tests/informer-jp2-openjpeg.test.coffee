@@ -1,9 +1,9 @@
 test = require 'tape'
-Informer = require('../lib/informer').Informer
+Informer = require('../lib/informers/informer-jp2-openjpeg').InformerJP2Openjpeg
 pather = require 'path'
 path = pather.join __dirname, '/images/trumpler14.jp2'
 
-test 'get height and width from JP2 with Kakadu', (assert) ->
+test 'get height and width from JP2 with opj_dump', (assert) ->
   assert.plan(1)
   expected_info =
     width: 3906
@@ -13,7 +13,7 @@ test 'get height and width from JP2 with Kakadu', (assert) ->
       { height: 245, width: 245 }, { height: 489, width: 489 },
       { height: 977, width: 977 }, { height: 1953, width: 1953 },
       { height: 3906, width: 3906 }]
-    tiles: [ { scaleFactors: [ 1, 2, 4, 8, 16, 32, 64 ], width: 1024 }]
+    tiles: [ { scaleFactors: [ 1, 2, 4, 8, 16, 32, 64 ], width: 1024, height: 1024 }]
 
   cb = (info) ->
     assert.deepEqual info, expected_info
