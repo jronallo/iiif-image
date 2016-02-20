@@ -23,7 +23,11 @@ The iiif-image package provides a few different helpers for working with the III
 
 ## Requirements
 
-Currently the Kakadu binary `kdu_expand` ought to be in the path of the user who is running this code. We do not distribute the Kakadu executables. See the Kakaud copyright notice and disclaimer below. Image manipulation relies on the [sharp](http://sharp.dimens.io/en/stable/) module which relies on libvips.
+Image manipulation relies on the [sharp](http://sharp.dimens.io/en/stable/) module which relies on libvips.
+
+In order to handle JP2 files you'll need to install OpenJPEG (`opj_decompress` & `opj_dump`) or the more performant but proprietary Kakadu executables (`kdu_expand` & `kdu_jp2info`).
+
+Note: We do not distribute the Kakadu executables. See the Kakadu copyright notice and disclaimer below. 
 
 ## Currently Provided Modules
 
