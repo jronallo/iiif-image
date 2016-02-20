@@ -1,6 +1,7 @@
 child_process = require 'child_process'
+InformerJp2 = require('./informer-jp2').InformerJp2
 
-class InformerJP2Openjpeg
+class InformerJp2Openjpeg extends InformerJp2
   # Accepts a callback that is only called after all the information is gathered
   constructor: (@path, @final_callback) ->
     @info = null
@@ -41,18 +42,4 @@ class InformerJP2Openjpeg
 
       @final_callback(@info)
 
-  # TODO: DRY up with informer-jp2-kakadu
-  calculate_sizes_for_levels: =>
-    sizes = []
-    width = @info.width
-    height = @info.height
-    for [0..@info.levels]
-      size =
-        width: width
-        height: height
-      sizes.push size
-      width = Math.ceil(width/2.0)
-      height = Math.ceil(height/2.0)
-    @info.sizes = sizes.reverse()
-
-exports.InformerJP2Openjpeg = InformerJP2Openjpeg
+exports.InformerJp2Openjpeg = InformerJp2Openjpeg

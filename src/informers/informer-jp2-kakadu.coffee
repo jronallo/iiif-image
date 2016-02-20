@@ -3,8 +3,9 @@ child_process = require 'child_process'
 util = require('util')
 fs = require 'fs'
 async = require 'async'
+InformerJp2 = require('./informer-jp2').InformerJp2
 
-class InformerJP2Kakadu
+class InformerJp2Kakadu extends InformerJp2
   # Accepts a callback that is only called after all the information is gathered
   constructor: (@path, @final_callback) ->
     @info = {}
@@ -92,18 +93,4 @@ class InformerJP2Kakadu
         fs.close(fd)
         cb()
 
-  calculate_sizes_for_levels: (cb) =>
-    sizes = []
-    width = @info.width
-    height = @info.height
-    for [0..@info.levels]
-      size =
-        width: width
-        height: height
-      sizes.push size
-      width = Math.ceil(width/2.0)
-      height = Math.ceil(height/2.0)
-    @info.sizes = sizes.reverse()
-    cb()
-
-exports.InformerJP2Kakadu = InformerJP2Kakadu
+exports.InformerJp2Kakadu = InformerJp2Kakadu

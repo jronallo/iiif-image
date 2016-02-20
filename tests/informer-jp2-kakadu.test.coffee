@@ -1,9 +1,9 @@
 test = require 'tape'
-Informer = require('../lib/informers/informer-jp2-kakadu').InformerJP2Kakadu
+Informer = require('../lib/informers/informer-jp2-kakadu').InformerJp2Kakadu
 pather = require 'path'
 path = pather.join __dirname, '/images/trumpler14.jp2'
 
-test 'get height and width from JP2 with Kakadu', (assert) ->
+test 'get height and width from Jp2 with Kakadu', (assert) ->
   assert.plan(1)
   expected_info =
     width: 3906

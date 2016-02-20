@@ -1,5 +1,5 @@
 test = require 'tape'
-Extractor = require('../lib/extractors/extractor-jp2-kakadu').ExtractorJP2Kakadu
+Extractor = require('../lib/extractors/extractor-jp2-kakadu').ExtractorJp2Kakadu
 fs = require 'fs-extra'
 pather = require 'path'
 tempfile = require 'tempfile'

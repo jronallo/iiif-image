@@ -11,12 +11,15 @@ This is not an offical implementation of the [IIIF Image API](http://iiif.io/api
 The iiif-image package provides a few different helpers for working with the IIIF Image API.
 
 - `ImageRequestParser`: Parses incoming IIIF Image Request URLs and returns
-- `Informer`: Given a path on the filesystem to an image provides information about the image required for responding to a IIIF Image Information Request. This information is also used for properly extracting an image. Note that currently this just gathers information like width and height. (Optional attributes like sizes and tiles will be done too.) It does not format a complete appropriate response to a IIIF Image Information Request.
-  - `InformerJP2Kakadu`: Currently only information from JP2 images are provided via Kakadu. Other information providers may be added in the future.
+- Informers: Given a path on the filesystem to an image provides information about the image required for responding to a IIIF Image Information Request. This information is also used for properly extracting an image. Note that currently this just gathers information like width and height. (Optional attributes like sizes and tiles will be done too.) It does not format a complete appropriate response to a IIIF Image Information Request.
+  - `InformerJP2Kakadu`: Uses `kdu_jp2info`
+  - `InformerJp2Openjpeg`: Uses `opj_dump`
 - `InfoJSONCreator`: Given the output of `Informer` and some other information it will create a nice JSON or JSON-LD representation in response to an IIIF Image Information request.
-- `Extractor`: Given a path to an image on the filesystem, information about the image (from `Informer`), and request parameters (from `ImageRequestParser`), it extracts the requested image. Any scaling and rotation is done via Imagemagic `convert`.
-  - `ExtractorJP2Kakadu`: Currently only JP2 images can be extracted via Kakadu.
-    - While there are multiple manipulators only the `SharpManipulator` is hooked up to work with this extractor. The Imagemagick-based `ConvertManipulator` was known to have been working at some point in the past. These could eventually be configurable, but in most cases the `SharpManipulator` ought to be preferred as it will return the image as a Buffer which can be sent directly back to the client.
+- Extractors:
+  - `Extractor`: Is just a wrapper to select an underlying extractor implementation. Every extractor when given a path to an image on the filesystem, information about the image (from `Informer`), and request parameters (from `ImageRequestParser`), it extracts the requested image.
+    - `ExtractorJP2Kakadu`: Uses `kdu_expand`
+    - `ExtractorJp2Openjpeg`: Uses `opj_decompress`
+- Manipulators: While there are multiple manipulators only the `SharpManipulator` is hooked up to work with the current JP2 extractors. The Imagemagick-based `ConvertManipulator` was known to have been working at some point in the past. These could eventually be configurable, but in most cases the `SharpManipulator` ought to be preferred as it will return the image as a Buffer which can be sent directly back to the client.
 
 ## Requirements
 
@@ -36,7 +39,7 @@ console.log params
 ### `Informer`
 
 ```coffee
-Informer = require('iiif-image').Informer
+Informer = require('iiif-image').InformerJp2Openjpeg
 cb = (info) ->
   console.log info
 informer = new Informer '/path/to/image/file.jp2', cb
@@ -58,7 +61,7 @@ In the simplest case like the following the extractor can run as a callback from
 ```coffee
 iiif = require 'iiif-image'
 Informer = iiif.Informer
-Extractor = iiif.Extractor
+Extractor = iiif.Extractor('opj')
 image_path = '/path/to/image/file.jp2'
 
 extractor_cb = (output_image) ->

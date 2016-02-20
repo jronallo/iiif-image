@@ -1,9 +1,9 @@
 test = require 'tape'
-Informer = require('../lib/informers/informer-jp2-openjpeg').InformerJP2Openjpeg
+Informer = require('../lib/informers/informer-jp2-openjpeg').InformerJp2Openjpeg
 pather = require 'path'
 path = pather.join __dirname, '/images/trumpler14.jp2'
 
-test 'get height and width from JP2 with opj_dump', (assert) ->
+test 'get height and width from Jp2 with opj_dump', (assert) ->
   assert.plan(1)
   expected_info =
     width: 3906
