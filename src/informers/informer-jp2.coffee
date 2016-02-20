@@ -1,5 +1,4 @@
 class InformerJp2
-  # TODO: DRY up with informer-jp2-kakadu
   calculate_sizes_for_levels: (cb) =>
     sizes = []
     width = @info.width

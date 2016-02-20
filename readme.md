@@ -27,7 +27,7 @@ Image manipulation relies on the [sharp](http://sharp.dimens.io/en/stable/) modu
 
 In order to handle JP2 files you'll need to install OpenJPEG (`opj_decompress` & `opj_dump`) or the more performant but proprietary Kakadu executables (`kdu_expand` & `kdu_jp2info`).
 
-Note: We do not distribute the Kakadu executables. See the Kakadu copyright notice and disclaimer below. 
+Note: We do not distribute the Kakadu executables. See the Kakadu copyright notice and disclaimer below.
 
 ## Currently Provided Modules
 
@@ -44,6 +44,7 @@ console.log params
 
 ```coffee
 Informer = require('iiif-image').InformerJp2Openjpeg
+# or Informer = require('iiif-image').Informer('opj')
 cb = (info) ->
   console.log info
 informer = new Informer '/path/to/image/file.jp2', cb
