@@ -31,7 +31,8 @@ class ExtractorJp2
         seriescb()
         @final_callback(image_buffer)
       (seriescb) => # clean up
-        fs.unlink(@temp_out_image)
+        fs.unlink @temp_out_image, (err) ->
+          return
     ]
 
   ###
