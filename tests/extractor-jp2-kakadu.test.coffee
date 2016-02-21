@@ -17,7 +17,7 @@ test_assertions_and_cleanup = (assert, output_image, format) ->
 Tests start here:
 ###
 
-test 'extract image with full region and w, size', (assert) ->
+test 'KDU: extract image with full region and w, size', (assert) ->
   # assert.plan(2)
   data = fixtures()
   tester = (output_image) ->
@@ -25,7 +25,7 @@ test 'extract image with full region and w, size', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
-test 'extract image with xywh region', (assert) ->
+test 'KDU: extract image with xywh region', (assert) ->
   # assert.plan(2)
   data = fixtures()
   data.options.params['region'] = data.region_xywh
@@ -34,7 +34,7 @@ test 'extract image with xywh region', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
-test 'extract image with small region and full size', (assert) ->
+test 'KDU: extract image with small region and full size', (assert) ->
   data = fixtures()
   data.options.params['region'] = data.region_xywh
   data.options.params['size'] = 'full'
@@ -43,7 +43,16 @@ test 'extract image with small region and full size', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
-test 'extract image with small region and w,h size', (assert) ->
+test 'KDU: extract image with pct: size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = data.region_xywh
+  data.options.params['size'] = {pct: 50}
+  tester = (output_image) ->
+    test_assertions_and_cleanup(assert, output_image, data.params.format)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'KDU: extract image with small region and w,h size', (assert) ->
   data = fixtures()
   data.options.params['region'] = data.region_xywh
   data.options.params['size'] = {w: 200, h: 200}
@@ -52,7 +61,7 @@ test 'extract image with small region and w,h size', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
-test 'extract image with small region and ,h size', (assert) ->
+test 'KDU: extract image with small region and ,h size', (assert) ->
   data = fixtures()
   data.options.params['region'] = data.region_xywh
   data.options.params['size'] = {w: undefined, h: 200}
@@ -61,7 +70,7 @@ test 'extract image with small region and ,h size', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
-test 'extract full image with small size but rotated 90 degrees', (assert) ->
+test 'KDU: extract full image with small size but rotated 90 degrees', (assert) ->
   data = fixtures()
   data.options.params['rotation'] = {degrees: 90, mirror: false}
   tester = (output_image) ->
@@ -69,7 +78,7 @@ test 'extract full image with small size but rotated 90 degrees', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
-test 'extract and convert to png', (assert) ->
+test 'KDU: extract and convert to png', (assert) ->
   data = fixtures()
   data.options.params['format'] = 'png'
   tester = (output_image) ->
