@@ -2,7 +2,7 @@ child_process = require 'child_process'
 
 # Use Imagemagick's convert command to manipulate an image based on params
 class ConvertManipulator
-  constructor: (@image_path, @params, @final_image_path) ->
+  constructor: (@image_path, @params, @info, @final_image_path) ->
 
   manipulate: (callback) =>
     convert_cmd = @convert_cmd()

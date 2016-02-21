@@ -43,6 +43,15 @@ test 'OPJ: extract image with small region and full size', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
+test 'OPJ: extract image with pct: size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = data.region_xywh
+  data.options.params['size'] = {pct: 50}
+  tester = (output_image) ->
+    test_assertions_and_cleanup(assert, output_image, data.params.format)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
 test 'OPJ: extract image with small region and w,h size', (assert) ->
   data = fixtures()
   data.options.params['region'] = data.region_xywh

@@ -1,7 +1,7 @@
 sharp = require('sharp')
 
 class SharpManipulator
-  constructor: (@temp_bmp, @params, @final_image) ->
+  constructor: (@temp_bmp, @params, @info, @final_image) ->
 
   manipulate: (callback) =>
     image = sharp(@temp_bmp)
@@ -9,6 +9,12 @@ class SharpManipulator
     if @params.size != 'full'
       if @params.size.w?
         image.resize(@params.size.w)
+      else if @params.size.pct?
+        region_width = if @params.region == 'full' then @info.width else @params.region.w
+        percent_factor = @params.size.pct / 100
+        # Is it correct to just round this?
+        calculated_width = Math.round region_width * percent_factor
+        image.resize(calculated_width)
       else
         image.resize(null, @params.size.h)
     # do we need to rotate too?
@@ -22,8 +28,5 @@ class SharpManipulator
       image.toFormat(@params.format)
     image.toBuffer (err, buffer, info) =>
       callback(null, buffer, info)
-
-
-
 
 exports.SharpManipulator = SharpManipulator

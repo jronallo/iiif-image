@@ -16,7 +16,7 @@ class ExtractorJp2
     @params = @options.params
     @final_image = tempfile(".#{@params.format}")
     @set_temp_out_image()
-    @manipulator = new SharpManipulator @temp_out_image, @params, @final_image
+    @manipulator = new SharpManipulator @temp_out_image, @params, @info, @final_image
 
   extract: =>
     cmd = @extract_cmd()
@@ -45,6 +45,13 @@ class ExtractorJp2
     if @params.size.w?
       region_width = if @params.region == 'full' then @info.width else @params.region.w
       reduction_factor = (region_width / @params.size.w)
+    else if @params.size.pct?
+      # determine size of original resulting image
+      region_width = if @params.region == 'full' then @info.width else @params.region.w
+      # determine the final size that we want for the image
+      percent_factor = @params.size.pct / 100
+      calculated_width = region_width * percent_factor
+      reduction_factor = (region_width/ calculated_width)
     else
       region_height = if @params.region == 'full' then @info.height else @params.region.h
       reduction_factor = (region_height / @params.size.h)
