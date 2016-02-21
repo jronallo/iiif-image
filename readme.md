@@ -95,10 +95,10 @@ The goal is to have `iiif-image` be compliant with all levels of [version 2.1](h
 `ExtractorJP2Kakadu` is believed to comply with Level 0 in all aspects but some parameters at a higher level.
 
 - Region: Level 1
-- Size: Level 1 (except sizeByPct)
+- Size: Level 1
 - Rotation: Level 2 (does not do mirroring yet)
 - Quality: Level 1 (unlikely that options other than 'default' will be supported without a pull request)
-- Format: Level 2. Since the format is just passed through from the parameters it receives to sharp, other formats beyond the Level 2 required ones that sharp supports could work. The `ConvertManipulator` which uses Imagemagick could probably create even more still.Imagemagick
+- Format: Level 2. Since the format is just passed through from the parameters it receives to sharp, other formats beyond the Level 2 required ones that sharp supports could work. The `ConvertManipulator` which uses Imagemagick could probably create even more still.
 - HTTP Features and Indicating Compliance: Left to the individual image server to implement.
 
 ## Development
