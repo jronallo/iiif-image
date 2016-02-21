@@ -28,6 +28,7 @@
   "dependencies": {
     "async": "^1.5.2",
     "fs-extra": "^0.26.5",
+    "lodash": "^4.5.0",
     "sharp": "^0.13.0",
     "tempfile": "^1.1.1",
     "xml2js": "^0.4.16"
