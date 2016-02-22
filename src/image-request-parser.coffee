@@ -44,14 +44,17 @@ class ImageRequestParser
     if region_string.match /,/
       region_parts = region_string.split ','
       # If the region has a "pct:" then it is a percentage region
+      string_h = region_parts.pop()
+      string_w = region_parts.pop()
+      string_y = region_parts.pop()
       if region_string.match /^pct:/
         region_type = 'regionByPct'
-        pcth = parseFloat region_parts.pop()
-        pctw = parseFloat region_parts.pop()
-        pcty = parseFloat region_parts.pop()
+        pcth = parseFloat string_h
+        pctw = parseFloat string_w
+        pcty = parseFloat string_y
         [pct, x_string] = region_parts.pop().split ':'
         pctx = parseFloat x_string
-
+        # return
         pctx: pctx
         pcty: pcty
         pctw: pctw
@@ -59,9 +62,9 @@ class ImageRequestParser
         type: region_type
       else # region by pixels
         region_type = 'regionByPx'
-        h = parseInt region_parts.pop()
-        w = parseInt region_parts.pop()
-        y = parseInt region_parts.pop()
+        h = parseInt string_h
+        w = parseInt string_w
+        y = parseInt string_y
         x_string = region_parts.pop()
         x = parseInt x_string
         # return
