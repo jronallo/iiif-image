@@ -3,6 +3,7 @@ tempfile = require 'tempfile'
 async = require 'async'
 child_process = require 'child_process'
 fs = require 'fs'
+enrich_params = require('../helpers').enrich_params
 
 ConvertManipulator = require('../manipulators/convert-manipulator').ConvertManipulator
 SharpManipulator = require('../manipulators/sharp-manipulator').SharpManipulator
@@ -18,6 +19,8 @@ class ExtractorJp2
     @set_temp_out_image()
     @manipulator = new SharpManipulator @temp_out_image, @params, @info, @final_image
 
+    @params = enrich_params(@params, @info)
+
   extract: =>
     cmd = @extract_cmd()
     # console.log cmd
@@ -27,9 +30,13 @@ class ExtractorJp2
           seriescb()
       (seriescb) => # convert (resize, rotate, etc.)
         @manipulator.manipulate(seriescb)
-      (image_buffer, info, seriescb) => # actual response
+      (image_buffer, params, info, seriescb) => # actual response
         seriescb()
-        @final_callback(image_buffer)
+        options =
+          path: @path
+          info: @info
+          params: params
+        @final_callback(image_buffer, options)
       (seriescb) => # clean up
         fs.unlink @temp_out_image, (err) ->
           return
@@ -45,13 +52,7 @@ class ExtractorJp2
     if @params.size.w?
       region_width = if @params.region == 'full' then @info.width else @params.region.w
       reduction_factor = (region_width / @params.size.w)
-    else if @params.size.pct?
-      # determine size of original resulting image
-      region_width = if @params.region == 'full' then @info.width else @params.region.w
-      # determine the final size that we want for the image
-      percent_factor = @params.size.pct / 100
-      calculated_width = region_width * percent_factor
-      reduction_factor = (region_width/ calculated_width)
+    
     else
       region_height = if @params.region == 'full' then @info.height else @params.region.h
       reduction_factor = (region_height / @params.size.h)

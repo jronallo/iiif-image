@@ -51,6 +51,12 @@ test 'validate region with x,y,w,h', (assert) ->
   assert.ok v.valid_region()
   assert.end()
 
+test 'validate region with pct:x,y,w,h', (assert) ->
+  params = region: {pctx: 1.1, pcty: 2.2, pctw: 5.5, pcth: 6.6}
+  v = new Validator params
+  assert.ok v.valid_region()
+  assert.end()
+
 test 'region cannot be other than string or object', (assert) ->
   params = region: /regex/
   v = new Validator params
@@ -99,7 +105,7 @@ test 'size with object with w,h', (assert) ->
   assert.ok v.valid_size()
   assert.end()
 
-test 'size with object with percentage', (assert) ->
+test 'size with object with percentage pct', (assert) ->
   params = size: {pct:3}
   v = new Validator params
   assert.ok v.valid_size()

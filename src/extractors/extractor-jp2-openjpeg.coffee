@@ -15,8 +15,8 @@ class ExtractorJp2Openjpeg extends ExtractorJp2
 
     if @params.region != 'full'
       region = @params.region
-      cmd += """-d            "#{region.x},#{region.y},#{region.x+region.w},#{region.y+region.h}"
-             """
+      cmd += """ -d "#{region.x},#{region.y},#{region.x+region.w},#{region.y+region.h}"
+               """
 
     reduction = if @params.size == 'full'
       0

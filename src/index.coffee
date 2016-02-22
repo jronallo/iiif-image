@@ -8,3 +8,4 @@ module.exports =
   InformerJp2Openjpeg: require('./informers/informer-jp2-openjpeg').InformerJp2Openjpeg
   InfoJSONCreator: require('./info-json-creator').InfoJSONCreator
   Validator: require('./validator').Validator
+  enrich_params: require('./helpers').enrich_params

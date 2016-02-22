@@ -17,8 +17,14 @@ fixtures = ->
   region_xywh =
     x: 0
     y: 0
-    h: 300
     w: 300
+    h: 300
+
+  region_pct =
+    pctx: 3.0
+    pcty: 3.0
+    pctw: 3.201
+    pcth: 3.201
 
   info =
     width: 3906
@@ -31,9 +37,11 @@ fixtures = ->
       { height: 3906, width: 3906 }]
     tiles: [ { scaleFactors: [ 1, 2, 4, 8, 16, 32, 64 ], width: 1024 }]
 
+  # This is what actually gets exported
   params: params
   info: info
   region_xywh: region_xywh
+  region_pct: region_pct
   options:
     path: path
     params: params

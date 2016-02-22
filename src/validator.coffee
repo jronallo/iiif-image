@@ -41,8 +41,13 @@ class Validator
     if type(region) == 'string'
       if region == 'full' then true else false
     else if type(region) == 'object'
-      if type(region.x) == 'number' && !isNaN(region.x) && type(region.y) == 'number' && !isNaN(region.y) && type(region.w) == 'number' && !isNaN(region.w) && type(region.h) == 'number' && !isNaN(region.h)
+      if @valid_region_xywh()
         if region.w > 0 && region.h > 0
+          true
+        else
+          false
+      else if @valid_region_pct_xywh()
+        if region.pctw > 0 && region.pcth > 0
           true
         else
           false
@@ -50,6 +55,14 @@ class Validator
         false
     else
       false
+
+  valid_region_xywh: ->
+    region = @params.region
+    type(region.x) == 'number' && !isNaN(region.x) && type(region.y) == 'number' && !isNaN(region.y) && type(region.w) == 'number' && !isNaN(region.w) && type(region.h) == 'number' && !isNaN(region.h)
+
+  valid_region_pct_xywh: ->
+    region = @params.region
+    type(region.pctx) == 'number' && !isNaN(region.pctx) && type(region.pcty) == 'number' && !isNaN(region.pcty) && type(region.pctw) == 'number' && !isNaN(region.pctw) && type(region.pcth) == 'number' && !isNaN(region.pcth)
 
   valid_size: ->
     size = @params.size
