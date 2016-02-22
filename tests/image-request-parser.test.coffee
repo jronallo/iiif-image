@@ -30,14 +30,14 @@ test 'parsing x,y,w,h region', (assert) ->
   assert.end()
 
 test 'parsing pct:x,y,w,h region', (assert) ->
-  url = 'http://www.example.org/image-service/abcd1234/pct:10,20,30,40/full/0/default.jpg'
+  url = 'http://www.example.org/image-service/abcd1234/pct:10.3,20.2,30.4,40/full/0/default.jpg'
   parser = new Parser(url)
   params = parser.parse()
   region =
-    x: 10
-    y: 20
-    w: 30
-    h: 40
+    pctx: 10.3
+    pcty: 20.2
+    pctw: 30.4
+    pcth: 40.0
     type: 'regionByPct'
   # console.log params
   assert.deepEqual params.region, region

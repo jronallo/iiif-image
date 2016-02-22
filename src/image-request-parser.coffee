@@ -43,23 +43,33 @@ class ImageRequestParser
     # If region has a comma it is not a "full" region
     if region_string.match /,/
       region_parts = region_string.split ','
-      h = parseInt region_parts.pop()
-      w = parseInt region_parts.pop()
-      y = parseInt region_parts.pop()
       # If the region has a "pct:" then it is a percentage region
-      if region_string.match /pct:/
+      if region_string.match /^pct:/
         region_type = 'regionByPct'
+        pcth = parseFloat region_parts.pop()
+        pctw = parseFloat region_parts.pop()
+        pcty = parseFloat region_parts.pop()
         [pct, x_string] = region_parts.pop().split ':'
+        pctx = parseFloat x_string
+
+        pctx: pctx
+        pcty: pcty
+        pctw: pctw
+        pcth: pcth
+        type: region_type
       else # region by pixels
         region_type = 'regionByPx'
+        h = parseInt region_parts.pop()
+        w = parseInt region_parts.pop()
+        y = parseInt region_parts.pop()
         x_string = region_parts.pop()
-      x = parseInt x_string
-
-      x: x
-      y: y
-      w: w
-      h: h
-      type: region_type
+        x = parseInt x_string
+        # return
+        x: x
+        y: y
+        w: w
+        h: h
+        type: region_type
     else
       region_string
 
