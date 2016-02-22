@@ -13,7 +13,7 @@ enrich_params = (params, info) ->
     region_width = if params.region == 'full' then info.width else params.region.w
     # determine the final size that we want for the image
     percent_factor = params.size.pct / 100
-    params.size.w = region_width * percent_factor
+    params.size.w = Math. round(region_width * percent_factor)
 
   params # return
 

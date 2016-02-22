@@ -65,7 +65,7 @@ In the simplest case like the following the extractor can run as a callback from
 
 ```coffee
 iiif = require 'iiif-image'
-Informer = iiif.Informer
+Informer = iiif.Informer('opj')
 Extractor = iiif.Extractor('opj')
 image_path = '/path/to/image/file.jp2'
 
@@ -90,14 +90,14 @@ The goal is to have `iiif-image` be compliant with all levels of [version 2.1](h
 
 `ImageRequestParser` should be able to extract parameters from all valid Image Request URLs. It does not enforce anything like quality or format as this is left up to the server to determine what it wants to support. This also means that qualities and formats not mentioned in the specification will be treated like any other value from the perspective of the parser. A `Validator` is provided which can check the validity of the request parameters that a parser creates. This allows for validity checks early on in a request. A `Validator` if it also has image information can also check whether the requested region is out of bounds.
 
-`InformerJP2Kakadu` ought to provide most (all?) of the information needed about an image without having to know about the particulars of the image server. To create a full Image Information Response this needs to be combined with data about the server. A `InfoJSONCreator` can be used to create a full info.json response.
+`Informer`s ought to provide the information needed about an image without having to know about the particulars of the image server. To create a full Image Information Response this needs to be combined with data about the server. A `InfoJSONCreator` can be used to create a full info.json response.
 
-`ExtractorJP2Kakadu` is believed to comply with Level 0 in all aspects but some parameters at a higher level.
+`Extractor`s are believed to comply with Level 0 in all aspects but some parameters at a higher level.
 
-- Region: Level 1
+- Region: Level 2
 - Size: Level 1
 - Rotation: Level 2 (does not do mirroring yet)
-- Quality: Level 1 (unlikely that options other than 'default' will be supported without a pull request)
+- Quality: Level 1 (unlikely that options other than 'default' will be supported)
 - Format: Level 2. Since the format is just passed through from the parameters it receives to sharp, other formats beyond the Level 2 required ones that sharp supports could work. The `ConvertManipulator` which uses Imagemagick could probably create even more still.
 - HTTP Features and Indicating Compliance: Left to the individual image server to implement.
 
@@ -126,6 +126,7 @@ Tests are written using tape.
 - Separate tests for each manipulator. Currently only sharp is turned on.
 - Module for taking parameters and creating a valid IIIF Image Request URI.
 - Before validation enrich the params when the info is also available.
+- test extraction from /trumpler14/0,0,100,100/101,/0/default.jpg
 
 ## Kakadu Copyright Notice and Disclaimer
 You will need to install the Kakadu binaries/executables available [here](http://kakadusoftware.com/downloads/). The executables available there are made available for demonstration purposes only. Neither the author, Dr. Taubman, nor UNSW Australia accept any liability arising from their use or re-distribution.

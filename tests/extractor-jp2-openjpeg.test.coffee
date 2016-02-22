@@ -108,3 +108,19 @@ test 'OPJ: extract and convert to png', (assert) ->
     test_assertions_and_cleanup(assert, output_image, data.params.format)
   extractor = new Extractor data.options, tester
   extractor.extract()
+
+test 'OPJ: resize above extracted size', (assert) ->
+  # /trumpler14/0,0,100,100/101,/0/default.jpg
+  data = fixtures()
+  params =
+    identifier: 'trumpler14'
+    region: {x:0, y:0, w: 100, h: 100}
+    size: {w: 101, h: undefined}
+    rotation: {degrees: 0, mirror: false}
+    quality: 'default'
+    format: 'jpg'
+  data.params = params
+  tester = (output_image, options) ->
+    test_assertions_and_cleanup(assert, output_image, data.params.format)
+  extractor = new Extractor data.options, tester
+  extractor.extract()

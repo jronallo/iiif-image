@@ -25,7 +25,6 @@ class InformerJp2Kakadu extends InformerJp2
         @calculate_sizes_for_levels(seriescb)
 
       (seriescb) =>
-        # console.log util.inspect(@kinfo, false, null)
         @info.tiles = []
         @info.tiles.push {width: @kinfo.tile_width}
         @info.tiles[0]['height'] = @info.tile_height if @kinfo.tile_width != @kinfo.tile_height

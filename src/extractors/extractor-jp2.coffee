@@ -23,7 +23,6 @@ class ExtractorJp2
 
   extract: =>
     cmd = @extract_cmd()
-    # console.log cmd
     async.waterfall [
       (seriescb) -> # extract_cmd
         child_process.exec cmd, (err, stdout, stderr) =>
@@ -52,7 +51,7 @@ class ExtractorJp2
     if @params.size.w?
       region_width = if @params.region == 'full' then @info.width else @params.region.w
       reduction_factor = (region_width / @params.size.w)
-    
+
     else
       region_height = if @params.region == 'full' then @info.height else @params.region.h
       reduction_factor = (region_height / @params.size.h)
@@ -71,7 +70,11 @@ class ExtractorJp2
     # reduction_factor
     same_or_bigger = _.filter reduction_scale_matches, (rsm) ->
       reduction_factor >= rsm.scale_factor
-    # Pick the first one that matches
-    same_or_bigger[0].reduction
+    # Pick the first one that matches as the reduction. But if there is none
+    # that are bigger then our size
+    if same_or_bigger.length > 0
+      same_or_bigger[0].reduction
+    else
+      0
 
 exports.ExtractorJp2 = ExtractorJp2

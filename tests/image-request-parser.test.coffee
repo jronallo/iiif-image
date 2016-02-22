@@ -25,7 +25,6 @@ test 'parsing x,y,w,h region', (assert) ->
     w: 2
     h: 3
     type: 'regionByPx'
-  # console.log params
   assert.deepEqual params.region, region
   assert.end()
 
@@ -39,7 +38,6 @@ test 'parsing pct:x,y,w,h region', (assert) ->
     pctw: 30.4
     pcth: 40.0
     type: 'regionByPct'
-  # console.log params
   assert.deepEqual params.region, region
   assert.end()
 
@@ -58,7 +56,6 @@ test 'parsing size by w,h', (assert) ->
     w: 100
     h: 200
     type: 'sizeByWh'
-  # console.log params
   assert.deepEqual params.size, size
   assert.end()
 
@@ -70,7 +67,6 @@ test 'parsing size by w,', (assert) ->
     w: 100
     h: undefined
     type: 'sizeByW'
-  # console.log params
   assert.deepEqual params.size, size
   assert.end()
 
@@ -82,7 +78,6 @@ test 'parsing size by ,h', (assert) ->
     w: undefined
     h: 100
     type: 'sizeByH'
-  # console.log params
   assert.deepEqual params.size, size
   assert.end()
 
@@ -93,7 +88,6 @@ test 'parsing size by pct:n', (assert) ->
   size =
     pct: 10
     type: 'sizeByPct'
-  # console.log params
   assert.deepEqual params.size, size
   assert.end()
 
@@ -105,7 +99,6 @@ test 'parsing size by !w,h', (assert) ->
     w: 10
     h: 20
     type: 'sizeByForcedWh'
-  # console.log params
   assert.deepEqual params.size, size
   assert.end()
 
