@@ -123,6 +123,7 @@ Tests are written using tape.
 - Oops. pct: values should be read in as floats. These should be parsed into the params as pctx, pcty, pctw, and pcth.
 - Error handling.
 - Test output image is the correct dimensions.
+- Add extractor for TIF and JPEG images that only uses sharp. Could be convenient but is this a use case anyone has?
 - Separate tests for each manipulator. Currently only sharp is turned on.
 - Module for taking parameters and creating a valid IIIF Image Request URI.
 
