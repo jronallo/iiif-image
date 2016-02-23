@@ -11,12 +11,10 @@ path = require 'path'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
 util = require 'util'
-iiif = require('../lib/index')
-Informer = iiif.Informer('opj')
-Parser = iiif.ImageRequestParser
-Extractor = iiif.Extractor('opj')
+child_process = require 'child_process'
 packagejson = require '../package.json'
-
+iiif = require('../lib/index')
+Parser = iiif.ImageRequestParser
 program = require 'commander'
 
 program
@@ -25,9 +23,15 @@ program
   .option '-i, --input [value]', '/path/to/image.jp2'
   .option '-o, --output [value]', 'Directory to output image. Directory must exist.'
   .option '-u, --url [value]', 'URL or path to parse for generating image e.g. /trumpler14/0,0,500,500/300/0/default.jpg'
+  .option '-b, --binary [value]', 'JP2 binary to use. "kdu" or "opj"; Default "opj".'
   .option '-v, --verbose', 'Verbose output'
+  .option '-s, --show', 'Show (currently with exo-open)'
   .parse process.argv
 
+# By default use the opj binary.
+binary = if program.binary? then program.binary else 'opj'
+Informer = iiif.Informer(binary)
+Extractor = iiif.Extractor(binary)
 
 if !program.input && !program.output && !program.url
   program.help()
@@ -39,6 +43,8 @@ extractor_cb = (output_image, options) ->
   mkdirp outfile_path, (err) ->
     fs.writeFile outfile, output_image, (err) ->
       console.log outfile
+      if program.show
+        child_process.execSync "exo-open #{outfile}"
 
 
 info_cb = (info) ->
