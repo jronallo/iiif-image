@@ -3,10 +3,14 @@
   "version": "0.0.7",
   "description": "Node modules for working with the IIIF Image API",
   "main": "lib/index.js",
+  "bin": {
+    "iiif": "bin/iiif.js"
+  },
   "scripts": {
-    "test": "reset; bin/coffeetape tests/**/*.test.coffee | tap-spec",
+    "test": "reset; tests/scripts/coffeetape tests/**/*.test.coffee | tap-spec",
     "watch": "nodemon -q -e js,coffee --watch lib --watch tests -x 'npm test'",
-    "compile": "./node_modules/coffee-script/bin/coffee --watch --compile --output lib src"
+    "compile": "./node_modules/coffee-script/bin/coffee --watch --compile --output lib src",
+    "foreman": "foreman start -f Procfile"
   },
   "repository": {
     "type": "git",
@@ -27,8 +31,10 @@
   },
   "dependencies": {
     "async": "^1.5.2",
+    "commander": "^2.9.0",
     "fs-extra": "^0.26.5",
     "lodash": "^4.5.0",
+    "mkdirp": "^0.5.1",
     "sharp": "^0.13.0",
     "tempfile": "^1.1.1",
     "xml2js": "^0.4.16"

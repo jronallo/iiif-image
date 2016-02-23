@@ -117,9 +117,16 @@ To watch for changes and run the tests:
 npm run watch
 ```
 
+If you need to compile the iiif.coffee CLI in the bin directory as well as the library code, run this:
+
+```sh
+npm run foreman
+```
+
 Tests are written using tape.
 
 ### TODO
+- Include better CLI than scripts/extractor.coffee
 - Error handling.
 - Test output image is the correct dimensions.
 - Add extractor for TIF and JPEG images that only uses sharp. Could be convenient but is this a use case anyone has?
