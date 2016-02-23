@@ -20,6 +20,7 @@ class ImageRequestParser
   parse: ->
     # Split the URL and then begin popping parts of the end
     url_parts = @url.split '/'
+    console.log url_parts
     quality_format = url_parts.pop()
     [quality, format] = quality_format.split '.'
     rotation_string = url_parts.pop()
@@ -40,7 +41,7 @@ class ImageRequestParser
     format: format
 
   parse_region: (region_string) ->
-    # If region has a comma it is not a "full" region
+    # If region has a comma it is not a "full" or "square" region
     if region_string.match /,/
       region_parts = region_string.split ','
       # If the region has a "pct:" then it is a percentage region

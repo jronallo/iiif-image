@@ -102,7 +102,7 @@ The goal is to have `iiif-image` be compliant with all levels of [version 2.1](h
 
 `Extractor`s are believed to comply with Level 1 in all aspects but some parameters at a higher level.
 
-- Region: Level 2
+- Region: Level 2 + regionSquare. Also supports non-standard simple gravity parameters like "!square" (for top-left gravity) and "square!" (for bottom-right gravity).
 - Size: Level 1
 - Rotation: Level 2 (does not do mirroring yet)
 - Quality: Level 1 (unlikely that options other than 'default' will be supported)
@@ -134,7 +134,7 @@ npm run foreman
 Tests are written using tape.
 
 ### TODO
-- Include better CLI than scripts/extractor.coffee
+- Add batch image processing with the profile and directory options
 - Error handling.
 - Test output image is the correct dimensions.
 - Add extractor for TIF and JPEG images that only uses sharp. Could be convenient but is this a use case anyone has?
