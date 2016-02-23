@@ -39,6 +39,9 @@ class Validator
   valid_region: ->
     region = @params.region
     if type(region) == 'string'
+      # Note that "square" is from the 2.1 draft specification. "!square" and
+      # "square!" are non-standard at the time of this comment, but will be
+      # proposed.
       if region == 'full' || region == 'square' || region == '!square' || region == 'square!'
         true
       else false
