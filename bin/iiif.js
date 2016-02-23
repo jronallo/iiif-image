@@ -49,7 +49,10 @@ extractor_cb = function(output_image, options) {
     return fs.writeFile(outfile, output_image, function(err) {
       console.log(outfile);
       if (program.show) {
-        return child_process.execSync("exo-open " + outfile);
+        return child_process.spawn("exo-open", [outfile], {
+          detached: true,
+          stdio: 'ignore'
+        });
       }
     });
   });

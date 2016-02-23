@@ -44,7 +44,10 @@ extractor_cb = (output_image, options) ->
     fs.writeFile outfile, output_image, (err) ->
       console.log outfile
       if program.show
-        child_process.execSync "exo-open #{outfile}"
+        child_process.spawn "exo-open", [outfile], {
+          detached: true,
+          stdio: 'ignore'
+        }
 
 
 info_cb = (info) ->
