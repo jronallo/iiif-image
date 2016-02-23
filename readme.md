@@ -29,7 +29,7 @@ In order to handle JP2 files you'll need to install OpenJPEG (`opj_decompress` &
 
 Note: We do not distribute the Kakadu executables. See the Kakadu copyright notice and disclaimer below.
 
-## Currently Provided Modules
+## Modules
 
 ### `ImageRequestParser`
 
@@ -84,6 +84,14 @@ informer = new Informer image_path, info_cb
 informer.inform(info_cb)  
 ```
 
+## CLI
+
+A CLI is provided to create a derivative image from IIIF parameters and source image.
+
+`iiif --help` and see usage.
+
+TODO: The goal of the CLI is to eventually allow creating images for Level 0 compliance with the IIIF Image API. It will also be able to be used to warm the info.json and image cache. This could be used even with a dynamic image server for the most frequently delivered image size, say the search results page thumbnail.
+
 ## Compliance
 
 The goal is to have `iiif-image` be compliant with all levels of [version 2.1](http://iiif.io/api/image/2.1/compliance/) of the API. It is not there yet. The following is what I believe to be the current compliance level.
@@ -92,7 +100,7 @@ The goal is to have `iiif-image` be compliant with all levels of [version 2.1](h
 
 `Informer`s ought to provide the information needed about an image without having to know about the particulars of the image server. To create a full Image Information Response this needs to be combined with data about the server. A `InfoJSONCreator` can be used to create a full info.json response.
 
-`Extractor`s are believed to comply with Level 0 in all aspects but some parameters at a higher level.
+`Extractor`s are believed to comply with Level 1 in all aspects but some parameters at a higher level.
 
 - Region: Level 2
 - Size: Level 1
