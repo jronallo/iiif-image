@@ -45,6 +45,24 @@ test 'validate region with full', (assert) ->
   assert.ok v.valid_region()
   assert.end()
 
+test 'validate region with square', (assert) ->
+  params = region: 'square'
+  v = new Validator params
+  assert.ok v.valid_region()
+  assert.end()
+
+test 'validate region with !square', (assert) ->
+  params = region: '!square'
+  v = new Validator params
+  assert.ok v.valid_region()
+  assert.end()
+
+test 'validate region with square!', (assert) ->
+  params = region: 'square!'
+  v = new Validator params
+  assert.ok v.valid_region()
+  assert.end()
+
 test 'validate region with x,y,w,h', (assert) ->
   params = region: {x: 0, y:0, w: 2, h: 2}
   v = new Validator params

@@ -39,7 +39,9 @@ class Validator
   valid_region: ->
     region = @params.region
     if type(region) == 'string'
-      if region == 'full' then true else false
+      if region == 'full' || region == 'square' || region == '!square' || region == 'square!'
+        true
+      else false
     else if type(region) == 'object'
       if @valid_region_xywh()
         if region.w > 0 && region.h > 0
