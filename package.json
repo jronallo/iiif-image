@@ -1,6 +1,6 @@
 {
   "name": "iiif-image",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Node modules for working with the IIIF Image API",
   "main": "lib/index.js",
   "bin": {
