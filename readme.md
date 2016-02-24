@@ -137,12 +137,10 @@ Tests are written using tape.
 
 ### TODO
 - Error handling.
-- Test output image is the correct dimensions.
+- Test output images are the correct dimensions.
 - Add extractor for TIF and JPEG images that only uses sharp. Could be convenient but is this a use case anyone has?
 - Separate tests for each manipulator. Currently only sharp is turned on.
 - Module for taking parameters and creating a valid IIIF Image Request URI.
-- Before validation enrich the params when the info is also available.
-- test extraction from /trumpler14/0,0,100,100/101,/0/default.jpg
 
 ## Kakadu Copyright Notice and Disclaimer
 You will need to install the Kakadu binaries/executables available [here](http://kakadusoftware.com/downloads/). The executables available there are made available for demonstration purposes only. Neither the author, Dr. Taubman, nor UNSW Australia accept any liability arising from their use or re-distribution.
