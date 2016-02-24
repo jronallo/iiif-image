@@ -143,7 +143,7 @@ Tests are written using tape.
 - Module for taking parameters and creating a valid IIIF Image Request URI.
 
 ## Kakadu Copyright Notice and Disclaimer
-You will need to install the Kakadu binaries/executables available [here](http://kakadusoftware.com/downloads/). The executables available there are made available for demonstration purposes only. Neither the author, Dr. Taubman, nor UNSW Australia accept any liability arising from their use or re-distribution.
+In order to use the "kdu" extractor option, you will need to install the Kakadu binaries/executables available [here](http://kakadusoftware.com/downloads/). Those executables are made available for demonstration purposes only. Neither the author, Dr. Taubman, nor UNSW Australia accept any liability arising from their use or re-distribution.
 
 That site states:
 
