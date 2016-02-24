@@ -134,7 +134,6 @@ npm run foreman
 Tests are written using tape.
 
 ### TODO
-- Add batch image processing with the profile and directory options
 - Error handling.
 - Test output image is the correct dimensions.
 - Add extractor for TIF and JPEG images that only uses sharp. Could be convenient but is this a use case anyone has?
