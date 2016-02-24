@@ -20,7 +20,6 @@ class ImageRequestParser
   parse: ->
     # Split the URL and then begin popping parts of the end
     url_parts = @url.split '/'
-    console.log url_parts
     quality_format = url_parts.pop()
     [quality, format] = quality_format.split '.'
     rotation_string = url_parts.pop()
