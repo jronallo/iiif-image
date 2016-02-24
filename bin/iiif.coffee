@@ -31,7 +31,7 @@ iiif --input ./tests/images/trumpler14.jp2 --output ~/tmp/iiif-out/ \
  -u /0,0,500,500/100,/0/default.jpg
 
 Example of a creating multiple images for multiple sources images.
-The --profile YAML file that specifies the different instructoins (URL parts)
+The --profile YAML file specifies the different instructions (URL parts)
 that should be used for each image in the directory.
 
 iiif --directory ~/path/to/directory-of-images --output ~/tmp/iiif-out/ \
