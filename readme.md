@@ -2,9 +2,17 @@
 
 Node modules for working with the [International Image Interoperability Framework (IIIF) Image API](http://iiif.io/api/image/).
 
-## Nota bene
+## Install
 
-This is not an offical implementation of the [IIIF Image API](http://iiif.io/api/image/). For other image servers and applications that implement the standard see <http://iiif.io/apps-demos/> and the [IIIF github organization](https://github.com/iiif).
+`npm i iiif-image`
+
+## Requirements
+
+Image manipulation relies on the [sharp](http://sharp.dimens.io/en/stable/) module which relies on libvips.
+
+In order to handle JP2 files you'll need to install OpenJPEG (`opj_decompress` & `opj_dump`) or the more performant but proprietary Kakadu executables (`kdu_expand` & `kdu_jp2info`).
+
+Note: We do not distribute the Kakadu executables. See the Kakadu copyright notice and disclaimer below.
 
 ## Modules
 
@@ -20,16 +28,6 @@ The iiif-image package provides a few different helpers for working with the III
     - `ExtractorJP2Kakadu`: Uses `kdu_expand`
     - `ExtractorJp2Openjpeg`: Uses `opj_decompress`
 - Manipulators: While there are multiple manipulators only the `SharpManipulator` is hooked up to work with the current JP2 extractors. The Imagemagick-based `ConvertManipulator` was known to have been working at some point in the past. These could eventually be configurable, but in most cases the `SharpManipulator` ought to be preferred as it will return the image as a Buffer which can be sent directly back to the client.
-
-## Requirements
-
-Image manipulation relies on the [sharp](http://sharp.dimens.io/en/stable/) module which relies on libvips.
-
-In order to handle JP2 files you'll need to install OpenJPEG (`opj_decompress` & `opj_dump`) or the more performant but proprietary Kakadu executables (`kdu_expand` & `kdu_jp2info`).
-
-Note: We do not distribute the Kakadu executables. See the Kakadu copyright notice and disclaimer below.
-
-## Modules
 
 ### `ImageRequestParser`
 
@@ -108,6 +106,10 @@ The goal is to have `iiif-image` be compliant with all levels of [version 2.1](h
 - Quality: Level 1 (unlikely that options other than 'default' will be supported)
 - Format: Level 2. Since the format is just passed through from the parameters it receives to sharp, other formats beyond the Level 2 required ones that sharp supports could work. The `ConvertManipulator` which uses Imagemagick could probably create even more still.
 - HTTP Features and Indicating Compliance: Left to the individual image server to implement.
+
+## Nota bene
+
+This is not an offical implementation of the [IIIF Image API](http://iiif.io/api/image/). For other image servers and applications that implement the standard see <http://iiif.io/apps-demos/> and the [IIIF github organization](https://github.com/iiif).
 
 ## Development
 
