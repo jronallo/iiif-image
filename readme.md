@@ -90,7 +90,7 @@ A CLI is provided to create a derivative image from IIIF parameters and source i
 
 `iiif --help` and see usage.
 
-TODO: The goal of the CLI is to eventually allow creating images for Level 0 compliance with the IIIF Image API. It will also be able to be used to warm the info.json and image cache. This could be used even with a dynamic image server for the most frequently delivered image size, say the search results page thumbnail.
+Besides converting single images, the CLI is capable of taking a directory of images and converting each to multiple derivatives. This tool allows for creating a IIIF Level 0 image server with pre-rendered images.
 
 ## Compliance
 
