@@ -6,7 +6,7 @@ CLI for iiif-image
 
 iiif -i ./tests/images/trumpler14.jp2 -o ~/tmp/iiif-out/ -u /trumpler14/0,0,500,500/100,/0/default.jpg
  */
-var Extractor, Informer, Parser, _, all_work, async, basename, binary, child_process, fn, fs, full_directory, full_url, glob, i, iiif, image, images, j, len, len1, mkdirp, outfile, outfile_path, packagejson, params, parser, path, profile, program, search_path, url, urls, usage, util, yaml;
+var Extractor, Informer, Parser, ProgressBar, _, all_work, async, bar, basename, binary, child_process, fn, fs, full_directory, full_url, glob, i, iiif, image, images, j, len, len1, mkdirp, outfile, outfile_path, packagejson, params, parser, path, profile, program, search_path, total, url, urls, usage, util, yaml;
 
 path = require('path');
 
@@ -23,6 +23,8 @@ glob = require('glob');
 async = require('async');
 
 _ = require('lodash');
+
+ProgressBar = require('progress');
 
 child_process = require('child_process');
 
@@ -54,6 +56,12 @@ images = program.input != null ? [program.input] : program.directory != null ? (
 
 urls = program.url != null ? [program.url] : program.profile != null ? (profile = yaml.safeLoad(fs.readFileSync(program.profile, 'utf8')), _.values(profile)) : void 0;
 
+total = urls.length * images.length;
+
+bar = new ProgressBar(':current of :total [:bar] :percent', {
+  total: total
+});
+
 all_work = [];
 
 for (i = 0, len = images.length; i < len; i++) {
@@ -63,7 +71,9 @@ for (i = 0, len = images.length; i < len; i++) {
     return all_work.push(function(done) {
       var extractor_cb, info_cb, informer;
       extractor_cb = function(output_image, options) {
-        console.log(util.inspect(options, false, null));
+        if (program.verbose) {
+          console.log(util.inspect(options, false, null));
+        }
         return mkdirp(outfile_path, function(err) {
           return fs.writeFile(outfile, output_image, function(err) {
             if (program.show) {
@@ -72,6 +82,7 @@ for (i = 0, len = images.length; i < len; i++) {
                 stdio: 'ignore'
               });
             }
+            bar.tick();
             return done(null, outfile);
           });
         });
@@ -105,5 +116,7 @@ for (i = 0, len = images.length; i < len; i++) {
 }
 
 async.parallel(all_work, function(err, results) {
-  return console.log(results.join("\n"));
+  if (program.verbose) {
+    return console.log(results.join("\n"));
+  }
 });

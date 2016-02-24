@@ -15,6 +15,7 @@ util = require 'util'
 glob = require 'glob'
 async = require 'async'
 _ = require 'lodash'
+ProgressBar = require 'progress'
 child_process = require 'child_process'
 packagejson = require '../package.json'
 iiif = require('../lib/index')
@@ -87,6 +88,10 @@ else if program.profile?
   profile = yaml.safeLoad(fs.readFileSync(program.profile, 'utf8'))
   _.values(profile)
 
+total = urls.length * images.length
+bar = new ProgressBar ':current of :total [:bar] :percent', {
+  total: total
+}
 all_work = []
 
 for image in images
@@ -106,7 +111,7 @@ for image in images
       all_work.push (done) ->
         # extractor is called last
         extractor_cb = (output_image, options) ->
-          console.log util.inspect(options, false, null)# if program.verbose
+          console.log util.inspect(options, false, null) if program.verbose
           mkdirp outfile_path, (err) ->
             fs.writeFile outfile, output_image, (err) ->
               if program.show
@@ -114,6 +119,7 @@ for image in images
                   detached: true,
                   stdio: 'ignore'
                 }
+              bar.tick()
               done(null, outfile)
         # info_cb is called after we get the information
         # TODO: cache the information for speed or run the info once and then
@@ -129,5 +135,7 @@ for image in images
         informer = new Informer image, info_cb
         informer.inform(info_cb)
 
+
+
 async.parallel all_work, (err, results) ->
-  console.log results.join("\n")
+  console.log results.join("\n") if program.verbose
