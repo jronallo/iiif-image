@@ -85,7 +85,7 @@ class ImageRequestParser
     else if size_string.match /,/
       [w, h] = size_string.split ','
       if w.match /!/
-        size_type = 'sizeByForcedWh'
+        size_type = 'sizeByConfinedWh'
         w = w.replace '!', ''
       w = if w == '' then undefined else parseInt w
       h = if h == '' then undefined else parseInt h

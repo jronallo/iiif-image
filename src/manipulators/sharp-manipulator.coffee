@@ -5,10 +5,34 @@ class SharpManipulator
 
   manipulate: (callback) =>
     image = sharp(@temp_bmp)
-    # resize
+    # resize only if not full
     if @params.size != 'full'
-      if @params.size.w?
+      # If we have a size width and size height then we have one of two ways
+      # to resize it.
+      if @params.size.w? && @params.size.h?
+        # If we had a bang then we resize in order to have the resulting image
+        # confined within the given width and height sizes
+        if @params.size.type == 'sizeByConfinedWh'
+          # maintain aspect ratio but fit within the given width and height
+          width_ratio = @params.region.w / @params.size.w
+          height_ratio = @params.region.h / @params.size.h
+          if width_ratio > height_ratio
+            image.resize @params.size.w
+          else
+            image.resize undefined, @params.size.h
+
+        # Force width and height. Does not maintain aspect ratio depending on
+        # whether the size height and size width maintain the aspect ratio.
+        else
+          image.resize(@params.size.w, @params.size.h)
+
+      # if we only have a width parameter we just resize based on that
+      else if @params.size.w?
         image.resize(@params.size.w)
+
+      # if we only have a size height
+      else if @params.size.h?
+        image.resize(null, @params.size.h)
 
       # If we have a size defined by pct we need to calculate the width
       # and then enrich the @params with it.
@@ -20,8 +44,8 @@ class SharpManipulator
         @params.size.w = calculated_width
         image.resize(calculated_width)
 
-      else
-        image.resize(null, @params.size.h)
+
+
     # do we need to rotate too?
     degrees = @params.rotation.degrees
     if degrees != 0 && degrees in [90, 180, 270]

@@ -4,13 +4,17 @@ fs = require 'fs-extra'
 pather = require 'path'
 tempfile = require 'tempfile'
 fixtures = require('./fixtures/extractor-fixtures').fixtures
+sharp = require 'sharp'
 
-test_assertions_and_cleanup = (assert, output_image, format) ->
+test_assertions_and_cleanup = (assert, output_image, format, tests) ->
   assert.ok output_image
-  # TODO: save the image and do some test of it
-  tmp_path = pather.join(__dirname, "/../tmp/out.#{format}")
-  fs.writeFile tmp_path, output_image, (err) ->
-    # TODO: Run `identify` on the resulting image and test it?
+  if tests?
+    sharp(output_image).metadata (err, metadata) ->
+      # console.log metadata
+      assert.equal metadata.width, tests.w if tests.w
+      assert.equal metadata.height, tests.h if tests.h
+      assert.end()
+  else
     assert.end()
 
 ###
@@ -79,8 +83,29 @@ test 'OPJ: extract image with small region and w,h size', (assert) ->
   data = fixtures()
   data.options.params['region'] = data.region_xywh
   data.options.params['size'] = {w: 200, h: 200}
+  tests = {w:200, h:200}
   tester = (output_image, options) ->
-    test_assertions_and_cleanup(assert, output_image, data.params.format)
+    test_assertions_and_cleanup(assert, output_image, data.params.format, tests)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'OPJ: extract image with small region and w,h distorted size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = data.region_xywh
+  data.options.params['size'] = {w: 200, h: 100}
+  tests = {w:200, h:100}
+  tester = (output_image, options) ->
+    test_assertions_and_cleanup(assert, output_image, data.params.format, tests)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'OPJ: extract image with !w,h size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = {x: 0, y: 0 , w: 200, h: 100}
+  data.options.params['size'] = {w: 100, h: 100, type: 'sizeByConfinedWh'}
+  tests = {w:100, h:50}
+  tester = (output_image, options) ->
+    test_assertions_and_cleanup(assert, output_image, data.params.format, tests)
   extractor = new Extractor data.options, tester
   extractor.extract()
 

@@ -112,7 +112,7 @@ test 'parsing size by !w,h', (assert) ->
   size =
     w: 10
     h: 20
-    type: 'sizeByForcedWh'
+    type: 'sizeByConfinedWh'
   assert.deepEqual params.size, size
   assert.end()
 
