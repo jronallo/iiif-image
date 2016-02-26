@@ -13,25 +13,14 @@ class SharpManipulator
       # If we have a size width and size height then we have one of two ways
       # to resize it.
       if @params.size.w? && @params.size.h?
+        image.resize(@params.size.w, @params.size.h)
         # If we had a bang then we resize in order to have the resulting image
         # confined within the given width and height sizes
         if @params.size.type == 'sizeByConfinedWh'
           # maintain aspect ratio but fit within the given width and height
-          width = if @params.region == 'full' then @info.width else @params.region.w
-          height = if @params.region == 'full' then @info.height else @params.region.h
-          width_ratio = width / @params.size.w
-          height_ratio = height / @params.size.h
-          console.log @params
-          console.log [width_ratio, height_ratio]
-          if width_ratio > height_ratio
-            image.resize @params.size.w
-          else
-            image.resize undefined, @params.size.h
-
-        # Force width and height. Does not maintain aspect ratio depending on
-        # whether the size height and size width maintain the aspect ratio.
+          image.max()
         else
-          image.resize(@params.size.w, @params.size.h)
+          image.ignoreAspectRatio()
 
       # if we only have a width parameter we just resize based on that
       else if @params.size.w?
@@ -50,8 +39,6 @@ class SharpManipulator
         calculated_width = Math.round region_width * percent_factor
         @params.size.w = calculated_width
         image.resize(calculated_width)
-
-
 
     # do we need to rotate too?
     degrees = @params.rotation.degrees
