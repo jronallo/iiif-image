@@ -40,8 +40,16 @@ class SharpManipulator
         @params.size.w = calculated_width
         image.resize(calculated_width)
 
-    # do we need to rotate too?
     degrees = @params.rotation.degrees
+
+    # For sharp rotation happens before flip() so this won't work
+    if @params.rotation.mirror
+      if degrees == 0 || degrees == 180
+        image.flop()
+      else if degrees == 90 || degrees == 270
+        image.flip()
+
+    # do we need to rotate too?
     if degrees != 0 && degrees in [90, 180, 270]
       image.rotate(degrees)
 
