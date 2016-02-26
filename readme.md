@@ -98,12 +98,12 @@ The goal is to have `iiif-image` be compliant with all levels of [version 2.1](h
 
 `Informer`s ought to provide the information needed about an image without having to know about the particulars of the image server. To create a full Image Information Response this needs to be combined with data about the server. A `InfoJSONCreator` can be used to create a full info.json response.
 
-`Extractor`s are believed to comply with Level 1 in all aspects but some parameters at a higher level.
+`Extractor`s are believed to comply with Level 1 in all aspects, most of Level 2, includes optional features as well as non-standard extensions that do not conflict with the standard.
 
 - Region: Level 2 + regionSquare. Also supports non-standard simple gravity parameters like "!square" (for top-left gravity) and "square!" (for bottom-right gravity).
-- Size: Level 1
-- Rotation: Level 2 (does not do mirroring yet)
-- Quality: Level 1 (unlikely that options other than 'default' will be supported)
+- Size: Level 2
+- Rotation: Level 2 including mirroring
+- Quality: Level 1 (unlikely that options other than 'default' will be supported without request)
 - Format: Level 2. Since the format is just passed through from the parameters it receives to sharp, other formats beyond the Level 2 required ones that sharp supports could work. The `ConvertManipulator` which uses Imagemagick could probably create even more still.
 - HTTP Features and Indicating Compliance: Left to the individual image server to implement.
 
