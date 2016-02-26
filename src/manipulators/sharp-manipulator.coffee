@@ -1,9 +1,12 @@
 sharp = require('sharp')
+enrich_params = require('../helpers').enrich_params
 
 class SharpManipulator
   constructor: (@temp_bmp, @params, @info, @final_image) ->
 
+
   manipulate: (callback) =>
+    @params = enrich_params(@params, @info)
     image = sharp(@temp_bmp)
     # resize only if not full
     if @params.size != 'full'
@@ -14,8 +17,12 @@ class SharpManipulator
         # confined within the given width and height sizes
         if @params.size.type == 'sizeByConfinedWh'
           # maintain aspect ratio but fit within the given width and height
-          width_ratio = @params.region.w / @params.size.w
-          height_ratio = @params.region.h / @params.size.h
+          width = if @params.region == 'full' then @info.width else @params.region.w
+          height = if @params.region == 'full' then @info.height else @params.region.h
+          width_ratio = width / @params.size.w
+          height_ratio = height / @params.size.h
+          console.log @params
+          console.log [width_ratio, height_ratio]
           if width_ratio > height_ratio
             image.resize @params.size.w
           else

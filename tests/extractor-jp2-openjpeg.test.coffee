@@ -109,6 +109,36 @@ test 'OPJ: extract image with !w,h size', (assert) ->
   extractor = new Extractor data.options, tester
   extractor.extract()
 
+test 'OPJ: extract image with !w,h size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = {x: 0, y: 0 , w: 100, h: 200}
+  data.options.params['size'] = {w: 50, h: 50, type: 'sizeByConfinedWh'}
+  tests = {w:25, h:50}
+  tester = (output_image, options) ->
+    test_assertions_and_cleanup(assert, output_image, data.params.format, tests)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'OPJ: extract image with !w,h size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = 'full'
+  data.options.params['size'] = {w: 100, h: 90, type: 'sizeByConfinedWh'}
+  tests = {w:90, h:90}
+  tester = (output_image, options) ->
+    test_assertions_and_cleanup(assert, output_image, data.params.format, tests)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
+test 'OPJ: extract image with !w,h size', (assert) ->
+  data = fixtures()
+  data.options.params['region'] = 'full'
+  data.options.params['size'] = {w: 90, h: 100, type: 'sizeByConfinedWh'}
+  tests = {w:90, h:90}
+  tester = (output_image, options) ->
+    test_assertions_and_cleanup(assert, output_image, data.params.format, tests)
+  extractor = new Extractor data.options, tester
+  extractor.extract()
+
 test 'OPJ: extract image with small region and ,h size', (assert) ->
   data = fixtures()
   data.options.params['region'] = data.region_xywh
