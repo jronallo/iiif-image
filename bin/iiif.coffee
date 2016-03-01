@@ -137,5 +137,5 @@ for image in images
 
 
 
-async.parallel all_work, (err, results) ->
+async.series all_work, (err, results) ->
   console.log results.join("\n") if program.verbose

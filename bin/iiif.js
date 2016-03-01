@@ -115,7 +115,7 @@ for (i = 0, len = images.length; i < len; i++) {
   }
 }
 
-async.parallel(all_work, function(err, results) {
+async.series(all_work, function(err, results) {
   if (program.verbose) {
     return console.log(results.join("\n"));
   }
