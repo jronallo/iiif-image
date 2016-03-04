@@ -20,6 +20,7 @@ child_process = require 'child_process'
 packagejson = require '../package.json'
 iiif = require('../lib/index')
 Parser = iiif.ImageRequestParser
+InfoJSONCreator = require('iiif-image').InfoJSONCreator
 program = require 'commander'
 
 usage = """
@@ -61,6 +62,9 @@ program
   # batch mode options
   .option '-p, --profile [value]', 'path to profile for image processing'
   .option '-d, --directory [value]', 'path to directory of JP2 images to process'
+  # info.json options
+  .option '-t, --host [value]', 'Base URL host for info.json'
+  .option '-l, --level [value]', 'IIIF level. Defaults to 0'
   # output options
   .option '-s, --show', 'Show (currently with exo-open). Only works in single image mode.'
   .option '-v, --verbose', 'Verbose output'
@@ -92,50 +96,75 @@ total = urls.length * images.length
 bar = new ProgressBar ':current of :total [:bar] :percent', {
   total: total
 }
-all_work = []
+
+queue = async.queue (task, queue_callback) ->
+  console.log task if program.verbose
+  # extractor is called last
+  extractor_cb = (output_image, options) ->
+    console.log util.inspect(options, false, null) if program.verbose
+    mkdirp task.outfile_path, (err) ->
+      fs.writeFile task.outfile, output_image, (err) ->
+        if program.show
+          child_process.spawn "exo-open", [task.outfile], {
+            detached: true,
+            stdio: 'ignore'
+          }
+        bar.tick()
+        queue_callback()
+
+  # prepare for extractor
+  options =
+    path: task.image
+    params: task.params # from ImageRequestParser
+    info: task.info
+  extractor = new Extractor options, extractor_cb
+  extractor.extract()
+
+queue.concurrency = 1
+
+queue.drain = ->
+  console.log 'All done.'
+
+cache_info_json = (info, basename) ->
+  host = program.host || 'http://example.org'
+  server_info =
+    id: path.join host, basename
+    level: program.level || 0
+  info_json_creator = new InfoJSONCreator info, server_info
+  info_json = info_json_creator.info_json
+  console.log info_json #if program.verbose
+  info_json_outfile = path.join program.output, basename, 'info.json'
+  info_json_string = JSON.stringify info_json
+  fs.writeFile info_json_outfile, info_json_string, (err) ->
+    if !err
+      console.log 'Wrote info.json'
+
 
 for image in images
   basename = path.basename image, '.jp2'
-  for url in urls
-    full_url = path.join '/', basename, url
-    parser = new Parser full_url
-    params = parser.parse()
-    outfile = path.join program.output, basename, url
-    outfile_path = path.dirname outfile
-    console.log params if program.verbose
+  # info_cb is called after we get the information
+  # TODO: cache the information for speed or run the info once and then
+  # do the multiple extractions.
+  info_cb = (info) ->
+    # cache the info.json
+    cache_info_json(info, basename)
 
-    # At this point we have the data we need so we form a closure to wrap it
-    # all up and keep these values stable for each function that gets passed
-    # to all_work for later processing.
-    do (image, basename, params, outfile, outfile_path) ->
-      all_work.push (done) ->
-        # extractor is called last
-        extractor_cb = (output_image, options) ->
-          console.log util.inspect(options, false, null) if program.verbose
-          mkdirp outfile_path, (err) ->
-            fs.writeFile outfile, output_image, (err) ->
-              if program.show
-                child_process.spawn "exo-open", [outfile], {
-                  detached: true,
-                  stdio: 'ignore'
-                }
-              bar.tick()
-              done(null, outfile)
-        # info_cb is called after we get the information
-        # TODO: cache the information for speed or run the info once and then
-        # do the multiple extractions.
-        info_cb = (info) ->
-          options =
-            path: image
-            params: params # from ImageRequestParser
-            info: info
-          extractor = new Extractor options, extractor_cb
-          extractor.extract()
+    for url in urls
+      task = {}
+      full_url = path.join '/', basename, url
+      parser = new Parser full_url
+      task.params = parser.parse()
+      task.outfile = path.join program.output, basename, url
+      task.outfile_path = path.dirname task.outfile
+      task.image = image
+      task.info = _.cloneDeep info
+      console.log task.params if program.verbose
 
-        informer = new Informer image, info_cb
-        informer.inform(info_cb)
+      queue.push(task)
 
 
+  informer = new Informer image, info_cb
+  informer.inform(info_cb)
 
-async.series all_work, (err, results) ->
-  console.log results.join("\n") if program.verbose
+# async.series all_work, (err, results) ->
+#   console.log results.join("\n") if program.verbose
