@@ -139,12 +139,9 @@ cache_info_json = (info, basename) ->
     if !err
       console.log 'Wrote info.json'
 
-
 for image in images
   basename = path.basename image, '.jp2'
   # info_cb is called after we get the information
-  # TODO: cache the information for speed or run the info once and then
-  # do the multiple extractions.
   info_cb = (info) ->
     # cache the info.json
     cache_info_json(info, basename)
@@ -162,9 +159,5 @@ for image in images
 
       queue.push(task)
 
-
   informer = new Informer image, info_cb
   informer.inform(info_cb)
-
-# async.series all_work, (err, results) ->
-#   console.log results.join("\n") if program.verbose
