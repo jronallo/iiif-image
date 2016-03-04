@@ -90,6 +90,8 @@ A CLI is provided to create a derivative image from IIIF parameters and source i
 
 Besides converting single images, the CLI is capable of taking a directory of images and converting each to multiple derivatives. This tool allows for creating a IIIF Level 0 image server with pre-rendered images.
 
+It allows for creating a profile in YAML to set the host, IIIF compliance level, and URL parameters for creating images. See an example in `config/profile.yml`.
+
 ## Compliance
 
 The goal is to have `iiif-image` be compliant with all levels of [version 2.1](http://iiif.io/api/image/2.1/compliance/) of the API. It is not there yet. The following is what I believe to be the current compliance level.
