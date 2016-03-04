@@ -29,42 +29,40 @@ creates images suitable for a Level 0 IIIF image server.
 Example of a single --input file and single --url:
 
 iiif --input ./tests/images/trumpler14.jp2 --output ~/tmp/iiif-out/ \
- -u /0,0,500,500/100,/0/default.jpg
+  --url /0,0,500,500/100,/0/default.jpg
 
 Example of a creating multiple images for multiple sources images.
 The --profile YAML file specifies the different instructions (URL parts)
-that should be used for each image in the directory.
+that should be used for each image in the directory as well as a host server
+and IIIF conformance level.
 
-iiif --directory ~/path/to/directory-of-images --output ~/tmp/iiif-out/ \
---profile ./config/profile.yml
+iiif --input ~/path/to/directory-of-images --output ~/tmp/iiif-out/ \
+  --profile ./config/profile.yml
 
-Input and instruction parameters can be mixed and matched.
-Input should be either --input or --directory
 Instructions for processing should be either --url or --profile
 
 An example YAML profile could look like the following and can include any
 number of key value pairs. The keys are simply mneumonic for humans.
----
-search_index_page: /square/300,/0/default.jpg
-index_show_view:   /full/600,/0/default.jpg
 
+---
+host: http://example.org/
+level: 1
+urls:
+  search_index_page: /square/300,/0/default.jpg
+  index_show_view:   /full/600,/0/default.jpg
 """
 
 program
   .version packagejson.version
   .usage usage
   # Single image mode options
-  .option '-i, --input [value]', '/path/to/image.jp2'
+  .option '-i, --input [value]', '/path/to/image.jp2 or /path/to/directory/'
   .option '-u, --url [value]', 'URL or path to parse for generating image. Only include pieces other than the identifier e.g. /0,0,500,500/300/0/default.jpg'
   # All mode options
   .option '-o, --output [value]', 'Directory to output image. Directory must exist.'
   .option '-b, --binary [value]', 'JP2 binary to use. "kdu" or "opj"; Default "opj".'
   # batch mode options
   .option '-p, --profile [value]', 'path to profile for image processing'
-  .option '-d, --directory [value]', 'path to directory of JP2 images to process'
-  # info.json options
-  .option '-t, --host [value]', 'Base URL host for info.json'
-  .option '-l, --level [value]', 'IIIF level. Defaults to 0'
   # output options
   .option '-s, --show', 'Show (currently with exo-open). Only works in single image mode.'
   .option '-v, --verbose', 'Verbose output'
@@ -78,19 +76,26 @@ Extractor = iiif.Extractor(binary)
 if !program.input && !program.output && !program.url
   program.help()
 
-images = if program.input?
+stats = fs.statSync program.input
+images = if stats.isFile()
   [program.input]
-else if program.directory?
+else if stats.isDirectory()
   # find all JP2s in a directory
   full_directory = path.normalize program.directory
   search_path = path.join full_directory, '*.jp2'
   glob.sync(search_path, {realpath: true})
+else
+  console.log "You must include an input file or directory!"
+  process.exit()
 
 urls = if program.url?
   [program.url]
 else if program.profile?
   profile = yaml.safeLoad(fs.readFileSync(program.profile, 'utf8'))
-  _.values(profile)
+  _.values(profile.urls)
+else
+  console.log "You must include a URL or a profile.yml"
+  process.exit()
 
 total = urls.length * images.length
 bar = new ProgressBar ':current of :total [:bar] :percent', {
@@ -126,38 +131,39 @@ queue.drain = ->
   console.log 'All done.'
 
 cache_info_json = (info, basename) ->
-  host = program.host || 'http://example.org'
+  return unless profile?
+  host = profile.host
   server_info =
     id: path.join host, basename
-    level: program.level || 0
+    level: profile.level
   info_json_creator = new InfoJSONCreator info, server_info
   info_json = info_json_creator.info_json
-  console.log info_json #if program.verbose
+  console.log info_json if program.verbose
   info_json_outfile = path.join program.output, basename, 'info.json'
   info_json_string = JSON.stringify info_json
   fs.writeFile info_json_outfile, info_json_string, (err) ->
     if !err
-      console.log 'Wrote info.json'
+      console.log 'Wrote info.json' if program.verbose
 
 for image in images
-  basename = path.basename image, '.jp2'
-  # info_cb is called after we get the information
-  info_cb = (info) ->
-    # cache the info.json
-    cache_info_json(info, basename)
+  do (image) ->
+    basename = path.basename image, '.jp2'
+    # info_cb is called after we get the information
+    info_cb = (info) ->
+      # cache the info.json
+      cache_info_json(info, basename)
 
-    for url in urls
-      task = {}
-      full_url = path.join '/', basename, url
-      parser = new Parser full_url
-      task.params = parser.parse()
-      task.outfile = path.join program.output, basename, url
-      task.outfile_path = path.dirname task.outfile
-      task.image = image
-      task.info = _.cloneDeep info
-      console.log task.params if program.verbose
+      for url in urls
+        task = {}
+        full_url = path.join '/', basename, url
+        parser = new Parser full_url
+        task.params = parser.parse()
+        task.outfile = path.join program.output, basename, url
+        task.outfile_path = path.dirname task.outfile
+        task.image = image
+        task.info = _.cloneDeep info
+        console.log task if program.verbose
 
-      queue.push(task)
-
-  informer = new Informer image, info_cb
-  informer.inform(info_cb)
+        queue.push(task)
+    informer = new Informer image, info_cb
+    informer.inform(info_cb)
