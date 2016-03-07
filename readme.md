@@ -84,11 +84,11 @@ informer.inform(info_cb)
 
 ## CLI
 
-A CLI is provided to create a derivative image from IIIF parameters and source image.
+A CLI is provided to create a derivative image from IIIF parameters and JP2 source images.
 
 `iiif --help` and see usage.
 
-Besides converting single images, the CLI is capable of taking a directory of images and converting each to multiple derivatives. This tool allows for creating a IIIF Level 0 image server with pre-rendered images.
+Besides converting single images, the CLI is capable of taking a directory of JP2 images and converting each to multiple derivatives. This tool allows for warming an image server cache with pre-rendered images. Eventual goal is to support a Level 0 image server.
 
 It allows for creating a profile in YAML to set the host, IIIF compliance level, and URL parameters for creating images. See an example in `config/profile.yml`.
 

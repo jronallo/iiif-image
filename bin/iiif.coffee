@@ -15,7 +15,7 @@ util = require 'util'
 glob = require 'glob'
 async = require 'async'
 _ = require 'lodash'
-ProgressBar = require 'progress'
+Gauge = require("gauge")
 child_process = require 'child_process'
 packagejson = require '../package.json'
 iiif = require('../lib/index')
@@ -81,7 +81,7 @@ images = if stats.isFile()
   [program.input]
 else if stats.isDirectory()
   # find all JP2s in a directory
-  full_directory = path.normalize program.directory
+  full_directory = path.normalize program.input
   search_path = path.join full_directory, '*.jp2'
   glob.sync(search_path, {realpath: true})
 else
@@ -97,10 +97,9 @@ else
   console.log "You must include a URL or a profile.yml"
   process.exit()
 
-total = urls.length * images.length
-bar = new ProgressBar ':current of :total [:bar] :percent', {
-  total: total
-}
+gauge = new Gauge()
+total = 0
+completed = 0
 
 queue = async.queue (task, queue_callback) ->
   console.log task if program.verbose
@@ -114,7 +113,9 @@ queue = async.queue (task, queue_callback) ->
             detached: true,
             stdio: 'ignore'
           }
-        bar.tick()
+        completed += 1
+        percent_completed = completed/total
+        gauge.show("#{completed} of #{total}", percent_completed)
         queue_callback()
 
   # prepare for extractor
@@ -145,6 +146,12 @@ cache_info_json = (info, basename) ->
     if !err
       console.log 'Wrote info.json' if program.verbose
 
+urls_from_sizes = (sizes) ->
+  _.map sizes, url_from_size
+
+url_from_size = (size) ->
+  "/full/#{size.width},#{size.height}/0/default.jpg"
+
 for image in images
   do (image) ->
     basename = path.basename image, '.jp2'
@@ -152,6 +159,11 @@ for image in images
     info_cb = (info) ->
       # cache the info.json
       cache_info_json(info, basename)
+
+      # If there aren't any URLs and the level is zero then just use the
+      # sizes from the JP2 levels.
+      if urls.length == 0
+        urls = urls_from_sizes(info.sizes)
 
       for url in urls
         task = {}
@@ -163,7 +175,8 @@ for image in images
         task.image = image
         task.info = _.cloneDeep info
         console.log task if program.verbose
-
+        total += 1
         queue.push(task)
+
     informer = new Informer image, info_cb
     informer.inform(info_cb)

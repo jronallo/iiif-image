@@ -6,7 +6,7 @@ CLI for iiif-image
 
 iiif -i ./tests/images/trumpler14.jp2 -o ~/tmp/iiif-out/ -u /trumpler14/0,0,500,500/100,/0/default.jpg
  */
-var Extractor, InfoJSONCreator, Informer, Parser, ProgressBar, _, async, bar, binary, cache_info_json, child_process, fn, fs, full_directory, glob, i, iiif, image, images, len, mkdirp, packagejson, path, profile, program, queue, search_path, stats, total, urls, usage, util, yaml;
+var Extractor, Gauge, InfoJSONCreator, Informer, Parser, _, async, binary, cache_info_json, child_process, completed, fn, fs, full_directory, gauge, glob, i, iiif, image, images, len, mkdirp, packagejson, path, profile, program, queue, search_path, stats, total, url_from_size, urls, urls_from_sizes, usage, util, yaml;
 
 path = require('path');
 
@@ -24,7 +24,7 @@ async = require('async');
 
 _ = require('lodash');
 
-ProgressBar = require('progress');
+Gauge = require("gauge");
 
 child_process = require('child_process');
 
@@ -54,17 +54,17 @@ if (!program.input && !program.output && !program.url) {
 
 stats = fs.statSync(program.input);
 
-images = stats.isFile() ? [program.input] : stats.isDirectory() ? (full_directory = path.normalize(program.directory), search_path = path.join(full_directory, '*.jp2'), glob.sync(search_path, {
+images = stats.isFile() ? [program.input] : stats.isDirectory() ? (full_directory = path.normalize(program.input), search_path = path.join(full_directory, '*.jp2'), glob.sync(search_path, {
   realpath: true
 })) : (console.log("You must include an input file or directory!"), process.exit());
 
 urls = program.url != null ? [program.url] : program.profile != null ? (profile = yaml.safeLoad(fs.readFileSync(program.profile, 'utf8')), _.values(profile.urls)) : (console.log("You must include a URL or a profile.yml"), process.exit());
 
-total = urls.length * images.length;
+gauge = new Gauge();
 
-bar = new ProgressBar(':current of :total [:bar] :percent', {
-  total: total
-});
+total = 0;
+
+completed = 0;
 
 queue = async.queue(function(task, queue_callback) {
   var extractor, extractor_cb, options;
@@ -77,13 +77,16 @@ queue = async.queue(function(task, queue_callback) {
     }
     return mkdirp(task.outfile_path, function(err) {
       return fs.writeFile(task.outfile, output_image, function(err) {
+        var percent_completed;
         if (program.show) {
           child_process.spawn("exo-open", [task.outfile], {
             detached: true,
             stdio: 'ignore'
           });
         }
-        bar.tick();
+        completed += 1;
+        percent_completed = completed / total;
+        gauge.show(completed + " of " + total, percent_completed);
         return queue_callback();
       });
     });
@@ -129,12 +132,23 @@ cache_info_json = function(info, basename) {
   });
 };
 
+urls_from_sizes = function(sizes) {
+  return _.map(sizes, url_from_size);
+};
+
+url_from_size = function(size) {
+  return "/full/" + size.width + "," + size.height + "/0/default.jpg";
+};
+
 fn = function(image) {
   var basename, info_cb, informer;
   basename = path.basename(image, '.jp2');
   info_cb = function(info) {
     var full_url, j, len1, parser, results, task, url;
     cache_info_json(info, basename);
+    if (urls.length === 0) {
+      urls = urls_from_sizes(info.sizes);
+    }
     results = [];
     for (j = 0, len1 = urls.length; j < len1; j++) {
       url = urls[j];
@@ -149,6 +163,7 @@ fn = function(image) {
       if (program.verbose) {
         console.log(task);
       }
+      total += 1;
       results.push(queue.push(task));
     }
     return results;

@@ -33,11 +33,11 @@
     "async": "^1.5.2",
     "commander": "^2.9.0",
     "fs-extra": "^0.26.5",
+    "gauge": "^1.2.7",
     "glob": "^7.0.0",
     "js-yaml": "^3.5.3",
     "lodash": "^4.5.0",
     "mkdirp": "^0.5.1",
-    "progress": "^1.1.8",
     "sharp": "^0.13.0",
     "tempfile": "^1.1.1",
     "xml2js": "^0.4.16"
