@@ -52,6 +52,10 @@ urls:
   index_show_view:   /full/600,/0/default.jpg
 """
 
+# TODO: Handle prefixes for creating the full cache path. This could involved
+# adding a --prefix option or just parsing the host for the prefix. For now
+# the prefix should be added to the output path.
+
 program
   .version packagejson.version
   .usage usage
@@ -59,7 +63,7 @@ program
   .option '-i, --input [value]', '/path/to/image.jp2 or /path/to/directory/'
   .option '-u, --url [value]', 'URL or path to parse for generating image. Only include pieces other than the identifier e.g. /0,0,500,500/300/0/default.jpg'
   # All mode options
-  .option '-o, --output [value]', 'Directory to output image. Directory must exist.'
+  .option '-o, --output [value]', 'Directory to output image. Directory must exist. If your URLs use a prefix value, you should add it to the end of the directory.'
   .option '-b, --binary [value]', 'JP2 binary to use. "kdu" or "opj"; Default "opj".'
   # batch mode options
   .option '-p, --profile [value]', 'path to profile for image processing'
