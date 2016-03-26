@@ -107,7 +107,7 @@ queue.drain = function() {
 };
 
 cache_info_json = function(info, basename) {
-  var host, info_json, info_json_creator, info_json_outfile, info_json_string, server_info;
+  var host, info_json, info_json_creator, info_json_directory, info_json_outfile, info_json_string, server_info;
   if (profile == null) {
     return;
   }
@@ -121,13 +121,21 @@ cache_info_json = function(info, basename) {
   if (program.verbose) {
     console.log(info_json);
   }
-  info_json_outfile = path.join(program.output, basename, 'info.json');
+  info_json_directory = path.join(program.output, basename);
+  info_json_outfile = path.join(info_json_directory, 'info.json');
   info_json_string = JSON.stringify(info_json);
-  return fs.writeFile(info_json_outfile, info_json_string, function(err) {
+  console.log(info_json_string);
+  return mkdirp(info_json_directory, function(err) {
     if (!err) {
-      if (program.verbose) {
-        return console.log('Wrote info.json');
-      }
+      return fs.writeFile(info_json_outfile, info_json_string, function(err) {
+        if (err) {
+          return console.log(err);
+        } else {
+          if (program.verbose) {
+            return console.log('Wrote info.json');
+          }
+        }
+      });
     }
   });
 };

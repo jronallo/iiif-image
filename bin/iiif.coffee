@@ -144,11 +144,17 @@ cache_info_json = (info, basename) ->
   info_json_creator = new InfoJSONCreator info, server_info
   info_json = info_json_creator.info_json
   console.log info_json if program.verbose
-  info_json_outfile = path.join program.output, basename, 'info.json'
+  info_json_directory = path.join program.output, basename
+  info_json_outfile = path.join info_json_directory, 'info.json'
   info_json_string = JSON.stringify info_json
-  fs.writeFile info_json_outfile, info_json_string, (err) ->
+  console.log info_json_string
+  mkdirp info_json_directory, (err) ->
     if !err
-      console.log 'Wrote info.json' if program.verbose
+      fs.writeFile info_json_outfile, info_json_string, (err) ->
+        if err
+          console.log err
+        else
+          console.log 'Wrote info.json' if program.verbose
 
 urls_from_sizes = (sizes) ->
   _.map sizes, url_from_size
