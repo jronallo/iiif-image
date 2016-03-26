@@ -1,6 +1,12 @@
 ---
-host: http://example.org
+# The host is used for info.json file. It must contain any trailing slash.
+host: http://example.org/iiif/
+# IIIF Image API level
 level: 1
+# URLs that ought to be used to warm the cache or that ought to be retained
+# for longer than other cached images. The URL is just the portion of a
+# IIIF image request after the identifier.
+# The keys are mnemonic for humans and is not used anywhere.
 urls:
   search_index_page: /square/300,/0/default.jpg
   index_show_view:   /full/600,/0/default.jpg

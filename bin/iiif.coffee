@@ -45,7 +45,7 @@ An example YAML profile could look like the following and can include any
 number of key value pairs. The keys are simply mneumonic for humans.
 
 ---
-host: http://example.org/
+host: http://example.org/iiif/
 level: 1
 urls:
   search_index_page: /square/300,/0/default.jpg
@@ -135,7 +135,7 @@ cache_info_json = (info, basename) ->
   return unless profile?
   host = profile.host
   server_info =
-    id: path.join host, basename
+    id: host + basename
     level: profile.level
   info_json_creator = new InfoJSONCreator info, server_info
   info_json = info_json_creator.info_json

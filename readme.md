@@ -88,7 +88,7 @@ A CLI is provided to create a derivative image from IIIF parameters and JP2 sour
 
 `iiif --help` and see usage.
 
-Besides converting single images, the CLI is capable of taking a directory of JP2 images and converting each to multiple derivatives. This tool allows for warming an image server cache with pre-rendered images. Eventual goal is to support a Level 0 image server.
+Besides converting single images, the CLI is capable of taking a directory of JP2 images and converting each to multiple derivatives. This tool allows for warming an image server cache with pre-rendered images. Eventual goal is to support a Level 0 image server with correct sizes in info.json.
 
 It allows for creating a profile in YAML to set the host, IIIF compliance level, and URL parameters for creating images. See an example in `config/profile.yml`.
 
