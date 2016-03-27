@@ -147,12 +147,12 @@ cache_info_json = (info, basename) ->
   info_json_directory = path.join program.output, basename
   info_json_outfile = path.join info_json_directory, 'info.json'
   info_json_string = JSON.stringify info_json
-  console.log info_json_string
+  console.log info_json_string if program.verbose
   mkdirp info_json_directory, (err) ->
     if !err
       fs.writeFile info_json_outfile, info_json_string, (err) ->
         if err
-          console.log err
+          console.log err if program.verbose
         else
           console.log 'Wrote info.json' if program.verbose
 

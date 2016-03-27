@@ -10,7 +10,6 @@ test_assertions_and_cleanup = (assert, output_image, format, tests) ->
   assert.ok output_image
   if tests?
     sharp(output_image).metadata (err, metadata) ->
-      # console.log metadata
       assert.equal metadata.width, tests.w if tests.w
       assert.equal metadata.height, tests.h if tests.h
       assert.end()

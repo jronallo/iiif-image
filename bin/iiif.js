@@ -124,12 +124,16 @@ cache_info_json = function(info, basename) {
   info_json_directory = path.join(program.output, basename);
   info_json_outfile = path.join(info_json_directory, 'info.json');
   info_json_string = JSON.stringify(info_json);
-  console.log(info_json_string);
+  if (program.verbose) {
+    console.log(info_json_string);
+  }
   return mkdirp(info_json_directory, function(err) {
     if (!err) {
       return fs.writeFile(info_json_outfile, info_json_string, function(err) {
         if (err) {
-          return console.log(err);
+          if (program.verbose) {
+            return console.log(err);
+          }
         } else {
           if (program.verbose) {
             return console.log('Wrote info.json');

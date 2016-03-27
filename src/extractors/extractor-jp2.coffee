@@ -11,7 +11,6 @@ SharpManipulator = require('../manipulators/sharp-manipulator').SharpManipulator
 class ExtractorJp2
   # TODO: create way to allow choosing a manipulator in the constructor
   constructor: (@options, @final_callback) ->
-    # console.log @options
     @path = @options.path
     @info = @options.info
     @params = @options.params
