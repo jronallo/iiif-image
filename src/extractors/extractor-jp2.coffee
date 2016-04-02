@@ -57,7 +57,7 @@ class ExtractorJp2
 
     scale_factors = @info.tiles[0].scaleFactors.reverse()
     reduction_scale_matches = []
-    current_level = @info.levels
+    current_level = scale_factors.length - 1
     for scale_factor, index in scale_factors
       scale_factor_reduction =
         scale_factor: scale_factor
