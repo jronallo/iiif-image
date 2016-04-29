@@ -3,7 +3,7 @@ ExtractorJp2 = require('./extractor-jp2').ExtractorJp2
 
 class ExtractorJp2Kakadu extends ExtractorJp2
   set_temp_out_image: ->
-    @temp_out_image = tempfile('.bmp')
+    @temp_out_image = tempfile('.tif')
 
   extract_cmd: ->
     if @params.region == 'full'
